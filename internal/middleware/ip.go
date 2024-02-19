@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/variable"
+	"go-skeleton/pkg/utils"
 	"net/http"
 	"strings"
 )
@@ -14,10 +15,11 @@ func IpAuth(ctx *fiber.Ctx) error {
 	clientIp := ctx.IP()
 	flag := false
 	whiteList := variable.Config.GetString("server.whiteList")
-	for _, value := range strings.Split(whiteList, ",") {
-		if value == "*" || clientIp == value {
+	if whiteList == "*" || whiteList == "" {
+		flag = true
+	} else {
+		if utils.InAnySlice(strings.Split(whiteList, ","), clientIp) {
 			flag = true
-			break
 		}
 	}
 	if !flag {
