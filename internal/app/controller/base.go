@@ -12,28 +12,23 @@ type Controller struct{}
 var Base = &Controller{}
 
 func (c *Controller) Index(ctx *fiber.Ctx) error {
-	response.Json(ctx, fiber.StatusOK, response.Success, "index", "")
-	return ctx.Next()
+	return response.SuccessJson(ctx, "index", "")
 }
 
 func (c *Controller) Create(ctx *fiber.Ctx) error {
-	response.Json(ctx, fiber.StatusOK, response.Success, "create", "")
-	return ctx.Next()
+	return response.SuccessJson(ctx, "create", "")
 }
 
 func (c *Controller) Delete(ctx *fiber.Ctx) error {
-	response.Json(ctx, fiber.StatusOK, response.Success, "delete", "")
-	return ctx.Next()
+	return response.SuccessJson(ctx, "delete", "")
 }
 
 func (c *Controller) Update(ctx *fiber.Ctx) error {
-	response.Json(ctx, fiber.StatusOK, response.Success, "update", "")
-	return ctx.Next()
+	return response.SuccessJson(ctx, "update", "")
 }
 
 func (c *Controller) View(ctx *fiber.Ctx) error {
-	response.Json(ctx, fiber.StatusOK, response.Success, "view", "")
-	return ctx.Next()
+	return response.SuccessJson(ctx, "view", "")
 }
 
 // ValidateReqParams 验证请求参数
