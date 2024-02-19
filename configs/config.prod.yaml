@@ -1,0 +1,61 @@
+server:
+  mode: 'debug'
+  defaultPageSize: 10 # 默认分页条数
+  maxPageSize: 500    # 最大分页条数
+  fileUploadPath: './' # 文件上传路径
+  fileHostUrl: 'http://127.0.0.1:9527/' # 文件访问域名
+  whiteList: '*' # 白名单
+jwt:
+  tokenExpire: 864000   # token过期时间
+  tokenKey: 'Authorization' # token的键名
+  tokenIssuer: 'go-skeleon'
+  secret: '3jQSRZXeXzr09hq0GrZuL9Dgtk2XV9Ax'
+log:
+  enabled: true # 是否开启日志
+  level: -4 # 日志级别 debug: -4, info: 0, warn: 4, error: 8
+  fileName: 'go-skeleton' # 日志文件名称
+  dirPath: 'runtime/logs' # 日志默认存放目录
+  maxSize: 1 # 日志最大存储大小 1M
+  maxAge: 1 # 保留日志最大天数 1天
+  maxBackups: 3 # 保留日志最大数量 3个
+  localTime: true # 是否使用本地时间
+  compress: true # 是否压缩归档日志
+mysql:
+  enabled: true # 是否启用mysql
+  maxIdleConns: 10 # 设置空闲连接池中连接的最大数量
+  maxOpenConns: 100 # 设置打开数据库连接的最大数量
+  maxLifeTime: 60 # 设置了连接可复用的最大时间（分钟）
+  logLevel: 4 # 日志模式 1:slient 2:error 3:warn 4:info
+  reade: # 读分离
+    - host: '127.0.0.1'
+      port: '3306'
+      user: 'root'
+      password: '123456'
+      dbname: 'test'
+      prefix: ""
+  write: # 写分离
+    host: '127.0.0.1'
+    port: '3306'
+    user: 'root'
+    password: '123456'
+    dbname: 'test'
+    prefix: ""
+redis:
+  enabled: false # 是否启用redis
+  host: '127.0.0.1'
+  port: '6379'
+  password: '123456'
+  dbNum: 0
+  prefix: 'go_skeleton:' # 登录用户存入redis键名的前缀
+amqp:
+  enabled: true # 是否启用rabbitmq
+  host: '127.0.0.1'
+  port: '5672'
+  user: 'guest'
+  password: ''
+  vhost: ''
+oss:
+  endPoint: 'https://oss-cn-shanghai.aliyuncs.com'
+  accessKeyId: ''
+  accessKeySecret: ''
+  bucketName: ''
