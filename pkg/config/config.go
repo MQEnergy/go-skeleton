@@ -1,7 +1,6 @@
 package config
 
 import (
-	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 	"go-skeleton/pkg/cache/smap"
@@ -28,7 +27,6 @@ type ContainerInterface interface {
 
 type ViperInterface interface {
 	ContainerInterface
-	Listen()
 }
 
 // CacheInterface config cache
@@ -115,18 +113,6 @@ func (v *ViperConfig) Apply(option Options) error {
 	return nil
 }
 
-func (v *ViperConfig) Listen() {
-	v.viper.OnConfigChange(func(in fsnotify.Event) {
-		if time.Now().Sub(lastChangeTime).Seconds() >= 1 {
-			if in.Op.String() == "WRITE" {
-				// 清除cache内的配置
-				v.option.Cache.FuzzyDelete(v.option.CachePrefix)
-				lastChangeTime = time.Now()
-			}
-		}
-	})
-}
-
 // ============================= Viper Config ====================================
 
 // ============================= Config Cache ====================================
@@ -151,9 +137,6 @@ func New(config ViperInterface, option Options) (provider *Config, err error) {
 		if err = d.Apply(option); err != nil {
 			return
 		}
-	}
-	if d, ok := config.(interface{ Listen() }); ok {
-		d.Listen()
 	}
 	return &Config{
 		Viper: config,

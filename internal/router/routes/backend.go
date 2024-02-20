@@ -9,6 +9,7 @@ import (
 func InitBackendGroup(r fiber.Router, middleware ...fiber.Handler) {
 	router := r.Group("backend", middleware...)
 	{
+		router.Get("/user/index", backend.User.Index)
 		router.Post("/user/create", backend.User.Create)
 		router.Get("/user/view", backend.User.View)
 		router.Post("/user/update", backend.User.Update)

@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/urfave/cli/v2"
-	"go-skeleton/internal/app/pkg/validator"
 	"go-skeleton/internal/bootstrap"
 	"go-skeleton/internal/router"
 	"go-skeleton/pkg/config"
 	"os"
 	"runtime"
+	"time"
 )
 
 var (
@@ -35,7 +34,7 @@ var (
 
 // Stack 程序运行前的处理
 func Stack() *cli.App {
-	buildInfo := fmt.Sprintf("%s-%s-%s", runtime.GOOS, runtime.GOARCH, gtime.Now())
+	buildInfo := fmt.Sprintf("%s-%s-%s", runtime.GOOS, runtime.GOARCH, time.Now().Format(time.DateTime))
 
 	return &cli.App{
 		Name:    AppName,
@@ -60,12 +59,10 @@ func Stack() *cli.App {
 		},
 		Action: func(context *cli.Context) error {
 			fmt.Println(fmt.Sprintf("\u001B[34m%s\u001B[0m", _UI))
-			//	初始化服务
+			// bootstrap service
 			bootstrap.BootService()
-			//	引入验证翻译器
-			validator.NewValidate()
-			//	注册路由 启动程序
-			return router.Register().Listen(":" + AppPort)
+			// register routes and listen port
+			return router.Register(AppName).Listen(":" + AppPort)
 		},
 		Commands: []*cli.Command{},
 	}

@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/app/pkg/validator"
 	"go-skeleton/pkg/response"
+	"strings"
 )
 
 type Controller struct{}
@@ -31,20 +32,54 @@ func (c *Controller) View(ctx *fiber.Ctx) error {
 	return response.SuccessJson(ctx, "view", "")
 }
 
-// ValidateReqParams 验证请求参数
-func (c *Controller) ValidateReqParams(ctx *fiber.Ctx, requestParams fiber.Map) error {
+var validate *validator.XValidator
+
+func init() {
 	var err error
-	switch string(ctx.Request().Header.ContentType()) {
-	case "application/json":
-		err = ctx.Bind(requestParams)
-	case "application/xml":
-		err = ctx.XML(requestParams)
-	default:
-		err = ctx.Bind(requestParams)
-	}
+	validate, err = validator.New("zh")
 	if err != nil {
-		translate := validator.Translate(err)
-		return errors.New(translate[0])
+		panic(err)
+	}
+}
+
+// Validate ...
+func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
+	var errs = make([]error, 0)
+	// post
+	if ctx.Method() == "POST" {
+		contentType := string(ctx.Request().Header.ContentType())
+		switch {
+		case
+			contentType == "application/x-www-form-urlencoded",
+			contentType == "multipart/form-data",
+			contentType == "application/json",
+			contentType == "application/xml",
+			contentType == "text/xml",
+			strings.Contains(contentType, "multipart/form-data") == true:
+			if err := ctx.BodyParser(param); err != nil {
+				errs = append(errs, err)
+			}
+			if err := ctx.QueryParser(param); err != nil {
+				errs = append(errs, err)
+			}
+		}
+	}
+	// get
+	if ctx.Method() == "GET" {
+		if err := ctx.QueryParser(param); err != nil {
+			errs = append(errs, err)
+		}
+	}
+	// path
+	if err := ctx.ParamsParser(param); err != nil {
+		errs = append(errs, err)
+	}
+	if len(errs) > 0 {
+		return errs[0]
+	}
+	translates := validate.Validate(param)
+	if len(translates) > 0 && translates[0].Error {
+		return errors.New(translates[0].Message)
 	}
 	return nil
 }

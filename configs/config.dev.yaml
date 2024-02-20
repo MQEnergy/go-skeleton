@@ -1,5 +1,4 @@
 server:
-  appName: 'go-skeleton'
   mode: 'debug'
   defaultPageSize: 10 # 默认分页条数
   maxPageSize: 500    # 最大分页条数

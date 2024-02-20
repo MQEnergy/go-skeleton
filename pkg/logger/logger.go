@@ -26,9 +26,11 @@ func New(dirPath, fileName string, level slog.Level) *slog.Logger {
 	}
 	var dlvl slog.LevelVar
 	dlvl.Set(level)
-
-	// 同时输出到控制台和日志
 	writer := io.MultiWriter(os.Stdout, r)
+	// 同时输出到控制台和日志
+	if variable.Config.GetString("server.mode") == "production" {
+		writer = r
+	}
 	log4 := slog.New(slog.NewJSONHandler(writer, &slog.HandlerOptions{
 		AddSource: false, // true: 日志在源文件中的位置 是go文件
 		Level:     &dlvl,

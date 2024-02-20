@@ -6,7 +6,8 @@ import (
 	"go-skeleton/pkg/config"
 	"gorm.io/gorm"
 	"log/slog"
-	"os"
+	"path"
+	"runtime"
 )
 
 var (
@@ -19,9 +20,7 @@ var (
 )
 
 func init() {
-	dir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	BasePath = dir
+	_, filename, _, _ := runtime.Caller(0)
+	root := path.Dir(path.Dir(path.Dir(filename)))
+	BasePath = root
 }
