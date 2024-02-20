@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -35,7 +36,13 @@ func Register(appName string) *fiber.App {
 	r.Use(
 		cors.New(),
 		compress.New(),
-		//cache.New(),
+		cache.New(cache.Config{
+			Next: func(c *fiber.Ctx) bool {
+				return c.Query("noCache") == "true"
+			},
+			Expiration:   30 * time.Second,
+			CacheControl: false,
+		}), // Cache middleware for Fiber designed to intercept responses and cache them.
 		requestid.New(),
 	)
 

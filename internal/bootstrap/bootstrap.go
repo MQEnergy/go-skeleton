@@ -123,9 +123,6 @@ func bootLogger() error {
 	if variable.Log != nil {
 		return nil
 	}
-	if variable.Config.GetBool("log.enabled") == false {
-		return nil
-	}
 	variable.Log = logger.New(
 		variable.Config.GetString("log.dirPath"),
 		variable.Config.GetString("log.fileName"),

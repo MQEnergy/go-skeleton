@@ -11,7 +11,6 @@ jwt:
   tokenIssuer: 'go-skeleon'
   secret: '3jQSRZXeXzr09hq0GrZuL9Dgtk2XV9Ax'
 log:
-  enabled: true # 是否开启日志
   level: -4 # 日志级别 debug: -4, info: 0, warn: 4, error: 8
   fileName: 'go-skeleton' # 日志文件名称
   dirPath: 'runtime/logs' # 日志默认存放目录
