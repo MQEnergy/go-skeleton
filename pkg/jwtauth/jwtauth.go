@@ -3,9 +3,10 @@ package jwtauth
 import (
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/golang-jwt/jwt/v5"
 	"go-skeleton/pkg/config"
-	"time"
 )
 
 type JWT struct {

@@ -21,7 +21,7 @@ var User = &UserController{}
 // @return error
 // @author cx
 func (c *UserController) Index(ctx *fiber.Ctx) error {
-	var params = &user.IndexReq{}
+	params := &user.IndexReq{}
 	if err := c.Validate(ctx, params); err != nil {
 		return response.BadRequestException(ctx, err.Error())
 	}
@@ -35,7 +35,7 @@ func (c *UserController) Index(ctx *fiber.Ctx) error {
 // @return error
 // @author cx
 func (c *UserController) Login(ctx *fiber.Ctx) error {
-	var params = &user.LoginReq{}
+	params := &user.LoginReq{}
 	if err := c.Validate(ctx, params); err != nil {
 		return response.BadRequestException(ctx, err.Error())
 	}

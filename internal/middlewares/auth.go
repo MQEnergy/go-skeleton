@@ -36,6 +36,6 @@ func AuthMiddleware() fiber.Handler {
 			}
 			return false
 		},
-		//ContextKey: "user", // used in ctx.Locals("user").(*jwt.Token)
+		// ContextKey: "user", // used in ctx.Locals("user").(*jwt.Token)
 	})
 }

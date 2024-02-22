@@ -1,9 +1,10 @@
 package database
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 	"gorm.io/plugin/dbresolver"
-	"time"
 )
 
 type Database struct {

@@ -2,11 +2,12 @@ package middlewares
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/variable"
 	"go-skeleton/pkg/helper"
 	"go-skeleton/pkg/response"
-	"strings"
 )
 
 // WhiteIpMiddleware white list middleware

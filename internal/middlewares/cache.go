@@ -1,12 +1,13 @@
 package middlewares
 
 import (
+	"strings"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/utils"
 	"go-skeleton/pkg/helper"
-	"strings"
-	"time"
 )
 
 // CacheMiddleware http cache middleware
@@ -19,7 +20,7 @@ func CacheMiddleware() fiber.Handler {
 			keyG := ctx.IP() + ":" + ctx.Path()
 			switch ctx.Method() {
 			case fiber.MethodGet:
-				var params = make([]string, 0)
+				params := make([]string, 0)
 				for k, v := range ctx.Queries() {
 					params = append(params, k+"="+v)
 				}

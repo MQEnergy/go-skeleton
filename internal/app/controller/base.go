@@ -2,10 +2,11 @@ package controller
 
 import (
 	"errors"
+	"strings"
+
 	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/app/pkg/validator"
 	"go-skeleton/pkg/response"
-	"strings"
 )
 
 type Controller struct{}
@@ -44,7 +45,7 @@ func init() {
 
 // Validate ...
 func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
-	var errs = make([]error, 0)
+	errs := make([]error, 0)
 	// post
 	if ctx.Method() == fiber.MethodPost {
 		contentType := string(ctx.Request().Header.ContentType())

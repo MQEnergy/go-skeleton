@@ -2,6 +2,9 @@ package bootstrap
 
 import (
 	"fmt"
+	"log/slog"
+	"time"
+
 	"go-skeleton/internal/variable"
 	"go-skeleton/pkg/cache/redis"
 	"go-skeleton/pkg/config"
@@ -13,8 +16,6 @@ import (
 	"gorm.io/gorm"
 	logger2 "gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"log/slog"
-	"time"
 )
 
 // Define service list

@@ -1,6 +1,8 @@
 package router
 
 import (
+	"time"
+
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -11,16 +13,13 @@ import (
 	"go-skeleton/internal/router/routes"
 	"go-skeleton/internal/variable"
 	"go-skeleton/pkg/response"
-	"time"
 )
 
 // Register ...
 func Register(appName string) *fiber.App {
-	var (
-		publicMiddleware = []fiber.Handler{
-			middlewares.WhiteIpMiddleware(),
-		}
-	)
+	publicMiddleware := []fiber.Handler{
+		middlewares.WhiteIpMiddleware(),
+	}
 
 	r := fiber.New(fiber.Config{
 		ErrorHandler: func(c *fiber.Ctx, err error) error {

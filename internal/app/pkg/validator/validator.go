@@ -2,6 +2,7 @@ package validator
 
 import (
 	"fmt"
+
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"

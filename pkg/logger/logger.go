@@ -2,11 +2,12 @@ package logger
 
 import (
 	"fmt"
-	"go-skeleton/internal/variable"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"log/slog"
 	"os"
+
+	"go-skeleton/internal/variable"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 // New

@@ -1,13 +1,14 @@
 package variable
 
 import (
+	"log/slog"
+	"path"
+	"runtime"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/redis/go-redis/v9"
 	"go-skeleton/pkg/config"
 	"gorm.io/gorm"
-	"log/slog"
-	"path"
-	"runtime"
 )
 
 var (

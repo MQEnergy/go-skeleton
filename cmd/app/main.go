@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"runtime"
+	"time"
+
 	"github.com/urfave/cli/v2"
 	"go-skeleton/internal/bootstrap"
 	"go-skeleton/internal/router"
 	"go-skeleton/pkg/config"
-	"os"
-	"runtime"
-	"time"
 )
 
 var (

@@ -1,15 +1,14 @@
 package config
 
 import (
-	"github.com/spf13/cast"
-	"go-skeleton/pkg/cache/smap"
 	"sync"
 	"time"
+
+	"github.com/spf13/cast"
+	"go-skeleton/pkg/cache/smap"
 )
 
-var (
-	ConfEnv string
-)
+var ConfEnv string
 
 // CommonInterface ...
 type CommonInterface interface {

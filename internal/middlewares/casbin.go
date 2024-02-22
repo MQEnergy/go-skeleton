@@ -2,6 +2,8 @@ package middlewares
 
 import (
 	_ "embed"
+	"strings"
+
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/util"
@@ -11,7 +13,6 @@ import (
 	"go-skeleton/internal/variable"
 	"go-skeleton/pkg/helper"
 	"go-skeleton/pkg/response"
-	"strings"
 )
 
 //go:embed rbac_model.conf

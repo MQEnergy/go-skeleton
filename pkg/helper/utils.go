@@ -5,11 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/bwmarrin/snowflake"
-	"github.com/gogf/gf/v2/text/gstr"
-	"github.com/gogf/gf/v2/util/gconv"
-	"github.com/hashicorp/go-uuid"
-	"gorm.io/gorm/schema"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -19,6 +14,12 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/bwmarrin/snowflake"
+	"github.com/gogf/gf/v2/text/gstr"
+	"github.com/gogf/gf/v2/util/gconv"
+	"github.com/hashicorp/go-uuid"
+	"gorm.io/gorm/schema"
 )
 
 // InAnySlice 判断某个字符串是否在字符串切片中
