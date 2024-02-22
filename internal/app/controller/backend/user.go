@@ -3,6 +3,7 @@ package backend
 import (
 	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/app/controller"
+	"go-skeleton/internal/app/service/backend"
 	"go-skeleton/internal/request/user"
 	"go-skeleton/pkg/response"
 )
@@ -25,4 +26,22 @@ func (c *UserController) Index(ctx *fiber.Ctx) error {
 		return response.BadRequestException(ctx, err.Error())
 	}
 	return response.SuccessJson(ctx, "", "index")
+}
+
+// Login
+// @Description: login
+// @receiver c
+// @param ctx
+// @return error
+// @author cx
+func (c *UserController) Login(ctx *fiber.Ctx) error {
+	var params = &user.LoginReq{}
+	if err := c.Validate(ctx, params); err != nil {
+		return response.BadRequestException(ctx, err.Error())
+	}
+	info, err := backend.Auth.Login(params)
+	if err != nil {
+		return response.BadRequestException(ctx, err.Error())
+	}
+	return response.SuccessJson(ctx, "", info)
 }

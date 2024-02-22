@@ -1,8 +1,9 @@
-package utils
+package helper
 
 import (
 	"crypto/md5"
 	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/text/gstr"
@@ -77,22 +78,11 @@ func GeneratePasswordHash(password string, salt string) string {
 	return str
 }
 
-// FormatToString 格式化转化成string
-func FormatToString(originStr interface{}) string {
-	str := ""
-	switch originStr.(type) {
-	case float64:
-		str = strconv.FormatFloat(originStr.(float64), 'f', 10, 64)
-	case float32:
-		str = strconv.FormatFloat(originStr.(float64), 'f', 10, 32)
-	case nil:
-		str = ""
-	case int, int32, int64:
-		str = strconv.FormatInt(originStr.(int64), 10)
-	default:
-		str = originStr.(string)
-	}
-	return str
+// GenerateHash 生成md5 hash值
+func GenerateHash(str string) string {
+	s := md5.New()
+	s.Write([]byte(str))
+	return hex.EncodeToString(s.Sum(nil))
 }
 
 // IsPathExist 判断所给路径文件/文件夹是否存在

@@ -3,26 +3,25 @@ package router
 import (
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	"go-skeleton/internal/middleware"
+	"go-skeleton/internal/middlewares"
 	"go-skeleton/internal/router/routes"
 	"go-skeleton/internal/variable"
 	"go-skeleton/pkg/response"
 	"time"
 )
 
-var (
-	publicMiddleware = []fiber.Handler{
-		middleware.IpAuth,
-	}
-)
-
 // Register ...
 func Register(appName string) *fiber.App {
+	var (
+		publicMiddleware = []fiber.Handler{
+			middlewares.WhiteIpMiddleware(),
+		}
+	)
+
 	r := fiber.New(fiber.Config{
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return response.NotFoundException(c, err.Error())
@@ -36,16 +35,8 @@ func Register(appName string) *fiber.App {
 	r.Use(
 		cors.New(),
 		compress.New(),
-		cache.New(cache.Config{
-			Next: func(c *fiber.Ctx) bool {
-				return c.Query("noCache") == "true"
-			},
-			Expiration:   30 * time.Second,
-			CacheControl: false,
-		}), // Cache middleware for Fiber designed to intercept responses and cache them.
 		requestid.New(),
 	)
-
 	// logger
 	if variable.Config.GetString("server.mode") != "production" {
 		r.Use(logger.New(logger.Config{TimeFormat: time.DateTime}))
@@ -53,9 +44,9 @@ func Register(appName string) *fiber.App {
 	// common
 	routes.InitCommonGroup(r, publicMiddleware...)
 	// backend
-	routes.InitBackendGroup(r, middleware.CasbinAuth)
+	routes.InitBackendGroup(r, middlewares.CasbinMiddleware(), middlewares.AuthMiddleware(), middlewares.CacheMiddleware())
 	// frontend
-	routes.InitFrontendGroup(r, publicMiddleware...)
+	routes.InitFrontendGroup(r, append(publicMiddleware, middlewares.AuthMiddleware())...)
 
 	return r
 }

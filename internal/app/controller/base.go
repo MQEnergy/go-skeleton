@@ -46,7 +46,7 @@ func init() {
 func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
 	var errs = make([]error, 0)
 	// post
-	if ctx.Method() == "POST" {
+	if ctx.Method() == fiber.MethodPost {
 		contentType := string(ctx.Request().Header.ContentType())
 		switch {
 		case
@@ -65,7 +65,7 @@ func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
 		}
 	}
 	// get
-	if ctx.Method() == "GET" {
+	if ctx.Method() == fiber.MethodGet {
 		if err := ctx.QueryParser(param); err != nil {
 			errs = append(errs, err)
 		}

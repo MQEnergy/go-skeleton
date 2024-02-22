@@ -5,17 +5,18 @@ import (
 	"sync"
 )
 
-var cache sync.Map
-
 type SMap struct {
+	cache sync.Map
 }
 
 func New() *SMap {
-	return &SMap{}
+	return &SMap{
+		cache: sync.Map{},
+	}
 }
 
 func (c *SMap) Get(key string) any {
-	value, ok := cache.Load(key)
+	value, ok := c.cache.Load(key)
 	if ok {
 		return value
 	}
@@ -25,23 +26,23 @@ func (c *SMap) Get(key string) any {
 func (c *SMap) Set(key string, value any) bool {
 	var res bool
 	if exist := c.Has(key); exist == false {
-		cache.Store(key, value)
+		c.cache.Store(key, value)
 		res = true
 	}
 	return res
 }
 
 func (c *SMap) Has(key string) bool {
-	_, ok := cache.Load(key)
+	_, ok := c.cache.Load(key)
 	return ok
 }
 
 // FuzzyDelete 会删除所有以prefix为前缀的配置项
 func (c *SMap) FuzzyDelete(keyPre string) {
-	cache.Range(func(key, value interface{}) bool {
+	c.cache.Range(func(key, value interface{}) bool {
 		if key, ok := key.(string); ok {
 			if strings.HasPrefix(key, keyPre) {
-				cache.Delete(key)
+				c.cache.Delete(key)
 			}
 		}
 		return true

@@ -3,15 +3,21 @@ package bootstrap
 import (
 	"fmt"
 	"go-skeleton/internal/variable"
+	"go-skeleton/pkg/cache/redis"
 	"go-skeleton/pkg/config"
+	"go-skeleton/pkg/database"
+	"go-skeleton/pkg/database/driver/mysql"
+	"go-skeleton/pkg/helper"
 	"go-skeleton/pkg/logger"
-	"go-skeleton/pkg/mysql"
-	"go-skeleton/pkg/redis"
-	"go-skeleton/pkg/utils"
+	mysql2 "gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	logger2 "gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 	"log/slog"
+	"time"
 )
 
-// 定义服务列表
+// Define service list
 const (
 	MysqlService = `Mysql`
 	RedisService = `Redis`
@@ -19,40 +25,39 @@ const (
 
 type bootServiceMap map[string]func() error
 
-// BootedService 已经加载的服务
 var (
 	BootedService []string
 	err           error
-	// serviceMap 程序启动时需要自动加载的服务
-	serviceMap = bootServiceMap{
-		MysqlService: bootMysql,
-		RedisService: bootRedis,
+	serviceMap    = bootServiceMap{
+		MysqlService: initMysql,
+		RedisService: initRedis,
 	}
 )
 
-// BootService 加载服务
+// BootService Load service
 func BootService(services ...string) {
-	if err = bootConfig(); err != nil {
-		panic("初始化config配置失败：" + err.Error())
+	if err = initConfig(); err != nil {
+		panic("Failed to load config：" + err.Error())
 	}
-	if err = bootLogger(); err != nil {
-		panic("初始化log日志失败：" + err.Error())
+	if err = initLogger(); err != nil {
+		panic("Failed to load logger：" + err.Error())
 	}
 	if len(services) == 0 {
 		services = serviceMap.keys()
 	}
 	BootedService = make([]string, 0)
 	for k, val := range serviceMap {
-		if utils.InAnySlice[string](services, k) {
+		if helper.InAnySlice[string](services, k) {
 			if err := val(); err != nil {
-				panic("程序服务启动失败:" + err.Error())
+				panic(fmt.Sprintf("Failed to load service %s err: %s", k, err.Error()))
 			}
+			variable.Log.Info("Loading " + k + " service successfully")
 			BootedService = append(BootedService, k)
 		}
 	}
 }
 
-// keys 获取BootServiceMap中所有键值
+// keys ...
 func (m bootServiceMap) keys() []string {
 	keys := make([]string, 0)
 	for k := range m {
@@ -61,33 +66,53 @@ func (m bootServiceMap) keys() []string {
 	return keys
 }
 
-// bootMysql 装配数据库连接
-func bootMysql() error {
+// initMysql ...
+func initMysql() error {
 	if variable.DB != nil {
 		return nil
 	}
-	if variable.Config.GetBool("mysql.enabled") == false {
+	if variable.Config.GetBool("database.mysql.enabled") == false {
 		return nil
 	}
-	variable.DB, err = mysql.New(mysql.DatabaseConfig{
-		Host:         variable.Config.GetString("mysql.write.host"),
-		Port:         variable.Config.GetString("mysql.write.port"),
-		User:         variable.Config.GetString("mysql.write.user"),
-		Pass:         variable.Config.GetString("mysql.write.password"),
-		DbName:       variable.Config.GetString("mysql.write.dbname"),
-		Prefix:       variable.Config.GetString("mysql.write.prefix"),
-		MaxIdleConns: variable.Config.GetInt("mysql.maxIdleConns"),
-		MaxOpenConns: variable.Config.GetInt("mysql.maxOpenConns"),
-		MaxLifeTime:  variable.Config.GetInt("mysql.maxLifeTime"),
-	})
-	if err == nil {
-		variable.Log.Info("程序载入MySQL服务成功")
+	dbContainer := func(dns string) *mysql.Mysql {
+		return mysql.New(func(opts *mysql2.Config) {
+			opts.DSN = dns
+		})
 	}
-	return err
+	masterDsn := variable.Config.GetString("database.mysql.master")
+	d, err := database.New(
+		dbContainer(masterDsn),
+		&gorm.Config{
+			NamingStrategy: schema.NamingStrategy{
+				TablePrefix:   variable.Config.GetString("database.mysql.prefix"),
+				SingularTable: true, // 是否设置单数表名，设置为 是
+			},
+			Logger: logger2.Default.LogMode(logger2.LogLevel(variable.Config.GetInt("database.mysql.loglevel"))), // Todo
+		},
+		database.WithMaxIdleConn(variable.Config.GetInt("database.mysql.minIdleConn")),
+		database.WithMaxOpenConn(variable.Config.GetInt("database.mysql.maxOpenConn")),
+		database.WithConnMaxIdleTime(variable.Config.GetDuration("database.mysql.maxIdleTime")*time.Second),
+		database.WithConnMaxLifetime(variable.Config.GetDuration("database.mysql.maxLifetime")*time.Minute),
+	)
+	if err != nil {
+		return err
+	}
+	// write read seperate
+	if variable.Config.GetBool("database.mysql.seperation") {
+		var replicas []gorm.Dialector
+		for _, slave := range variable.Config.GetStringSlice("database.mysql.slaves") {
+			replicas = append(replicas, dbContainer(slave).Instance())
+		}
+		if err := d.WithSlaveDB([]gorm.Dialector{dbContainer(masterDsn).Instance()}, replicas); err != nil {
+			return err
+		}
+	}
+	variable.DB = d.DB
+	return nil
 }
 
-// bootRedis 装配redis服务
-func bootRedis() error {
+// initRedis ...
+func initRedis() error {
 	if variable.Redis != nil {
 		return nil
 	}
@@ -95,31 +120,33 @@ func bootRedis() error {
 		return nil
 	}
 	variable.Redis, err = redis.New(redis.Config{
-		Addr:     fmt.Sprintf("%s:%s", variable.Config.GetString("redis.host"), variable.Config.GetString("redis.port")),
-		Password: variable.Config.GetString("redis.password"),
-		DbNum:    variable.Config.GetInt("redis.dbname"),
+		Addr:        fmt.Sprintf("%s:%s", variable.Config.GetString("redis.host"), variable.Config.GetString("redis.port")),
+		Password:    variable.Config.GetString("redis.password"),
+		DbNum:       variable.Config.GetInt("redis.dbname"),
+		PoolSize:    variable.Config.GetInt("redis.poolSize"),
+		MinIdleConn: variable.Config.GetInt("redis.minIdleConn"),
+		MaxIdleConn: variable.Config.GetInt("redis.maxIdleConn"),
+		MaxLifetime: variable.Config.GetDuration("redis.maxLifeTime") * time.Second,
+		MaxIdleTime: variable.Config.GetDuration("redis.maxIdleTime") * time.Minute,
 	})
-	if err == nil {
-		variable.Log.Info("程序载入Redis服务成功")
-	}
 	return err
 }
 
-// bootConfig 初始化配置
-func bootConfig() error {
+// initConfig ...
+func initConfig() error {
 	var err error
 	variable.Config, err = config.New(config.NewViper(), config.Options{
 		BasePath: variable.BasePath,
-		Filename: "config." + config.ConfEnv,
+		FileName: "config." + config.ConfEnv,
 	})
 	if err == nil {
-		slog.Info("初始化配置成功")
+		slog.Info("Loading configuration successfully")
 	}
 	return err
 }
 
-// bootLogger ...
-func bootLogger() error {
+// initLogger ...
+func initLogger() error {
 	if variable.Log != nil {
 		return nil
 	}
@@ -128,7 +155,7 @@ func bootLogger() error {
 		variable.Config.GetString("log.fileName"),
 		slog.Level(variable.Config.GetInt("log.level")),
 	)
-	variable.Log.Info(fmt.Sprintf("程序载入Logger服务成功 [ 日志名：%s 日志路径：%s ]",
+	variable.Log.Info(fmt.Sprintf("Loading logger successfully [ name：%s path：%s ]",
 		variable.Config.GetString("log.fileName"),
 		variable.Config.GetString("log.dirPath"),
 	))
