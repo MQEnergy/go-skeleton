@@ -6,7 +6,8 @@ import (
 	"log/slog"
 	"os"
 
-	"go-skeleton/internal/variable"
+	"go-skeleton/pkg/config"
+
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
@@ -17,19 +18,19 @@ import (
 // @param level Set the log level to Error debug: -4, info: 0, warn: 4, error: 8
 // @return *slog.Logger
 // @author cx
-func New(dirPath, fileName string, level slog.Level) *slog.Logger {
+func New(c *config.Config) *slog.Logger {
 	r := &lumberjack.Logger{
-		Filename:   fmt.Sprintf("%s/%s.log", dirPath, fileName), // file name
-		MaxSize:    variable.Config.GetInt("log.maxSize"),       // Maximum file size default 1M
-		MaxAge:     variable.Config.GetInt("log.maxAge"),        // Maximum retention time 1天
-		MaxBackups: variable.Config.GetInt("log.maxBackups"),    // Maximum number of reserved files 3个
-		LocalTime:  variable.Config.GetBool("log.localTime"),    // Whether to use local time
-		Compress:   variable.Config.GetBool("log.compress"),     // Whether to compress archive logs
+		Filename:   fmt.Sprintf("%s/%s.log", c.Get("log.dirPath"), c.Get("log.fileName")), // file name
+		MaxSize:    c.GetInt("log.maxSize"),                                               // Maximum file size default 1M
+		MaxAge:     c.GetInt("log.maxAge"),                                                // Maximum retention time 1天
+		MaxBackups: c.GetInt("log.maxBackups"),                                            // Maximum number of reserved files 3个
+		LocalTime:  c.GetBool("log.localTime"),                                            // Whether to use local time
+		Compress:   c.GetBool("log.compress"),                                             // Whether to compress archive logs
 	}
 	var dlvl slog.LevelVar
-	dlvl.Set(level)
+	dlvl.Set(slog.Level(c.GetInt("log.level")))
 	writer := io.MultiWriter(os.Stdout, r)
-	if variable.Config.GetString("server.mode") == "production" {
+	if c.GetString("server.mode") == "production" {
 		writer = r
 	}
 	log4 := slog.New(slog.NewJSONHandler(writer, &slog.HandlerOptions{

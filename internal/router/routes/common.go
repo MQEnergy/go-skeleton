@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/middlewares"
-	"go-skeleton/internal/variable"
+	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/jwtauth"
 	"go-skeleton/pkg/response"
 )
@@ -11,13 +11,13 @@ import (
 func InitCommonGroup(r fiber.Router, middleware ...fiber.Handler) {
 	router := r.Group("/", middleware...)
 	{
-		j := jwtauth.New(variable.Config)
+		j := jwtauth.New(vars.Config)
 
 		router.Get("/", func(c *fiber.Ctx) error {
-			return response.SuccessJson(c, "", "")
+			return response.SuccessJSON(c, "", "")
 		})
 		router.Get("/ping", func(c *fiber.Ctx) error {
-			return response.SuccessJson(c, "", "pong")
+			return response.SuccessJSON(c, "", "pong")
 		})
 
 		// create jwt token
@@ -33,12 +33,12 @@ func InitCommonGroup(r fiber.Router, middleware ...fiber.Handler) {
 			if err != nil {
 				return response.UnauthorizedException(c, err.Error())
 			}
-			return response.SuccessJson(c, "", token)
+			return response.SuccessJSON(c, "", token)
 		})
 
 		// parse jwt token
 		router.Post("/token/view", middlewares.AuthMiddleware(), func(ctx *fiber.Ctx) error {
-			return response.SuccessJson(ctx, "", fiber.Map{
+			return response.SuccessJSON(ctx, "", fiber.Map{
 				"uid":      ctx.GetRespHeader("uid"),
 				"uuid":     ctx.GetRespHeader("uuid"),
 				"role_ids": ctx.GetRespHeader("role_ids"),

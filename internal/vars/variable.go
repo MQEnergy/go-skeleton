@@ -1,7 +1,6 @@
-package variable
+package vars
 
 import (
-	"log/slog"
 	"path"
 	"runtime"
 
@@ -14,7 +13,6 @@ import (
 var (
 	BasePath string         // 根目录
 	DB       *gorm.DB       // Mysql数据库
-	Log      *slog.Logger   // 日志
 	Redis    *redis.Client  // redis连接池
 	Router   *fiber.Router  // 路由
 	Config   *config.Config // 配置

@@ -25,7 +25,7 @@ func (c *UserController) Index(ctx *fiber.Ctx) error {
 	if err := c.Validate(ctx, params); err != nil {
 		return response.BadRequestException(ctx, err.Error())
 	}
-	return response.SuccessJson(ctx, "", "index")
+	return response.SuccessJSON(ctx, "", "index")
 }
 
 // Login
@@ -43,5 +43,5 @@ func (c *UserController) Login(ctx *fiber.Ctx) error {
 	if err != nil {
 		return response.BadRequestException(ctx, err.Error())
 	}
-	return response.SuccessJson(ctx, "", info)
+	return response.SuccessJSON(ctx, "", info)
 }

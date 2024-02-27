@@ -14,23 +14,23 @@ type Controller struct{}
 var Base = &Controller{}
 
 func (c *Controller) Index(ctx *fiber.Ctx) error {
-	return response.SuccessJson(ctx, "index", "")
+	return response.SuccessJSON(ctx, "index", "")
 }
 
 func (c *Controller) Create(ctx *fiber.Ctx) error {
-	return response.SuccessJson(ctx, "create", "")
+	return response.SuccessJSON(ctx, "create", "")
 }
 
 func (c *Controller) Delete(ctx *fiber.Ctx) error {
-	return response.SuccessJson(ctx, "delete", "")
+	return response.SuccessJSON(ctx, "delete", "")
 }
 
 func (c *Controller) Update(ctx *fiber.Ctx) error {
-	return response.SuccessJson(ctx, "update", "")
+	return response.SuccessJSON(ctx, "update", "")
 }
 
 func (c *Controller) View(ctx *fiber.Ctx) error {
-	return response.SuccessJson(ctx, "view", "")
+	return response.SuccessJSON(ctx, "view", "")
 }
 
 var validate *validator.XValidator

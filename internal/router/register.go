@@ -1,24 +1,22 @@
 package router
 
 import (
-	"time"
-
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"go-skeleton/internal/middlewares"
 	"go-skeleton/internal/router/routes"
-	"go-skeleton/internal/variable"
 	"go-skeleton/pkg/response"
 )
 
 // Register ...
 func Register(appName string) *fiber.App {
 	publicMiddleware := []fiber.Handler{
-		middlewares.WhiteIpMiddleware(),
+		middlewares.LoggerMiddleware(),  // 日志
+		middlewares.WhiteIpMiddleware(), // 白名单
 	}
 
 	r := fiber.New(fiber.Config{
@@ -32,14 +30,11 @@ func Register(appName string) *fiber.App {
 	})
 	// middleware cors, compress, cache, X-Request-Id
 	r.Use(
+		recover.New(),
 		cors.New(),
 		compress.New(),
 		requestid.New(),
 	)
-	// logger
-	if variable.Config.GetString("server.mode") != "production" {
-		r.Use(logger.New(logger.Config{TimeFormat: time.DateTime}))
-	}
 	// common
 	routes.InitCommonGroup(r, publicMiddleware...)
 	// backend

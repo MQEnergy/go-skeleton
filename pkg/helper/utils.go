@@ -116,7 +116,6 @@ func MakeFileOrPath(path string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
 	return file, nil
 }
 
@@ -199,7 +198,7 @@ func GetStructColumnName(s interface{}, _type int) ([]string, error) {
 
 // GetProjectModuleName 获取当前项目的module名称
 func GetProjectModuleName() string {
-	cmd := exec.Command("go", "list")
+	cmd := exec.Command("go", "list", "-m")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		panic(err)

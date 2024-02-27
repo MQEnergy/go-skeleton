@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"strings"
 
+	"go-skeleton/internal/vars"
+
 	"github.com/gofiber/fiber/v2"
-	"go-skeleton/internal/variable"
 	"go-skeleton/pkg/helper"
 	"go-skeleton/pkg/response"
 )
@@ -15,7 +16,7 @@ func WhiteIpMiddleware() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		clientIp := ctx.IP()
 		flag := false
-		whiteList := variable.Config.GetString("server.whiteList")
+		whiteList := vars.Config.GetString("server.whiteList")
 		if whiteList == "*" || whiteList == "" || ctx.IsFromLocal() {
 			flag = true
 		} else {

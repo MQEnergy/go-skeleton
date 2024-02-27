@@ -5,14 +5,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/golang-jwt/jwt/v5"
-	"go-skeleton/internal/variable"
+	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/response"
 )
 
 // AuthMiddleware jwt authentication middleware
 func AuthMiddleware() fiber.Handler {
 	return jwtware.New(jwtware.Config{
-		SigningKey: jwtware.SigningKey{Key: []byte(variable.Config.GetString("jwt.secret"))},
+		SigningKey: jwtware.SigningKey{Key: []byte(vars.Config.GetString("jwt.secret"))},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return response.UnauthorizedException(c, err.Error())
 		},

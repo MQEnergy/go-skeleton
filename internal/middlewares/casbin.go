@@ -4,13 +4,14 @@ import (
 	_ "embed"
 	"strings"
 
+	"go-skeleton/internal/vars"
+
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/util"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	casbin2 "github.com/gofiber/contrib/casbin"
 	"github.com/gofiber/fiber/v2"
-	"go-skeleton/internal/variable"
 	"go-skeleton/pkg/helper"
 	"go-skeleton/pkg/response"
 )
@@ -20,7 +21,7 @@ var rbacModelConf string
 
 // CasbinMiddleware casbin middleware
 func CasbinMiddleware() fiber.Handler {
-	adapter, _ := gormadapter.NewAdapterByDB(variable.DB)
+	adapter, _ := gormadapter.NewAdapterByDB(vars.DB)
 	rc, _ := model.NewModelFromString(rbacModelConf)
 
 	e, _ := casbin.NewEnforcer(rc, adapter)
