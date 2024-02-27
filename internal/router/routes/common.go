@@ -27,9 +27,9 @@ func InitCommonGroup(r fiber.Router, middleware ...fiber.Handler) {
 			if user != "john" || pass != "doe" {
 				return response.UnauthorizedException(c, "")
 			}
-			token, err := j.ApplySub(map[string]interface{}{
+			token, err := j.ApplyClaims(fiber.Map{
 				"name": user,
-			}).ApplyClaims().GenerateToken()
+			}).GenerateToken()
 			if err != nil {
 				return response.UnauthorizedException(c, err.Error())
 			}

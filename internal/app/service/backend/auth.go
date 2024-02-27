@@ -38,11 +38,12 @@ func (s *AuthService) Login(reqParams *user.LoginReq) (interface{}, error) {
 	if adminInfo.Password != helper.GeneratePasswordHash(reqParams.Password, adminInfo.Salt) {
 		return adminInfo, errors.New("账号或密码不正确")
 	}
-	token, err := jwtauth.New(vars.Config).ApplySub(map[string]interface{}{
-		"id":       adminInfo.Id,
-		"uuid":     adminInfo.Uuid,
-		"role_ids": adminInfo.RoleIds,
-	}).ApplyClaims().GenerateToken()
+	token, err := jwtauth.New(vars.Config).
+		ApplyClaims(fiber.Map{
+			"id":       adminInfo.Id,
+			"uuid":     adminInfo.Uuid,
+			"role_ids": adminInfo.RoleIds,
+		}).GenerateToken()
 	if err != nil {
 		return adminInfo, errors.New("登录失败")
 	}

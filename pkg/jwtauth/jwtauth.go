@@ -27,12 +27,8 @@ func New(cfg *config.Config) *JWT {
 	}
 }
 
-func (j *JWT) ApplySub(sub map[string]interface{}) *JWT {
+func (j *JWT) ApplyClaims(sub map[string]interface{}) *JWT {
 	j.claims["sub"] = sub
-	return j
-}
-
-func (j *JWT) ApplyClaims() *JWT {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, j.claims)
 	j.token = token
 	return j
