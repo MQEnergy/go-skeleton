@@ -2,6 +2,7 @@ package backend
 
 import (
 	"errors"
+	"github.com/golang-jwt/jwt/v5"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -39,7 +40,7 @@ func (s *AuthService) Login(reqParams *user.LoginReq) (interface{}, error) {
 		return adminInfo, errors.New("账号或密码不正确")
 	}
 	token, err := jwtauth.New(vars.Config).
-		WithClaims(fiber.Map{
+		WithClaims(jwt.MapClaims{
 			"id":       adminInfo.Id,
 			"uuid":     adminInfo.Uuid,
 			"role_ids": adminInfo.RoleIds,

@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"go-skeleton/internal/middlewares"
 	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/jwtauth"
@@ -27,7 +28,7 @@ func InitCommonGroup(r fiber.Router, middleware ...fiber.Handler) {
 			if user != "john" || pass != "doe" {
 				return response.UnauthorizedException(c, "")
 			}
-			token, err := j.WithClaims(fiber.Map{
+			token, err := j.WithClaims(jwt.MapClaims{
 				"name": user,
 			}).GenerateToken()
 			if err != nil {
