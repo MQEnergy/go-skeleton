@@ -64,7 +64,7 @@ func (c *FooController) Index(ctx *fiber.Ctx) error {
     if err := c.Validate(ctx, params); err != nil {
     return response.BadRequestException(ctx, err.Error())
     }
-    return response.SuccessJson(ctx, "", "index")
+    return response.SuccessJSON(ctx, "", "index")
 }
 ```
 
