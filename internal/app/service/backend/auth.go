@@ -39,7 +39,7 @@ func (s *AuthService) Login(reqParams *user.LoginReq) (interface{}, error) {
 		return adminInfo, errors.New("账号或密码不正确")
 	}
 	token, err := jwtauth.New(vars.Config).
-		ApplyClaims(fiber.Map{
+		WithClaims(fiber.Map{
 			"id":       adminInfo.Id,
 			"uuid":     adminInfo.Uuid,
 			"role_ids": adminInfo.RoleIds,
