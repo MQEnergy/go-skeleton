@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"math/rand/v2"
 	"mime/multipart"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -66,6 +68,16 @@ func GenerateUuid(size int) string {
 		return ""
 	}
 	return gstr.SubStr(str, 0, size)
+}
+
+// RandString 随机字符串
+func RandString(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.IntN(len(charset))]
+	}
+	return string(b)
 }
 
 // GeneratePasswordHash 生成密码hash值
@@ -204,4 +216,87 @@ func GetProjectModuleName() string {
 		panic(err)
 	}
 	return strings.Trim(string(output), "\n")
+}
+
+// GetFileNamesByDirPath 获取当前文件夹下的所有文件和文件夹名称（包括子文件夹和文件）
+func GetFileNamesByDirPath(root string) ([]map[string]interface{}, error) {
+	paths := make([]map[string]interface{}, 0)
+	dirs, err := GetAllDirs(root)
+	if err != nil {
+		return paths, err
+	}
+	// 获取每个文件夹的第一级文件列表
+	for _, dir := range dirs {
+		var pathItem map[string]interface{}
+		fileNames := make([]string, 0)
+		files, err := ioutil.ReadDir(dir)
+		if err != nil {
+			continue
+		}
+		pathItem = map[string]interface{}{
+			"path":  strings.Replace(dir, root, "", 1),
+			"files": []string{},
+		}
+		for _, file := range files {
+			if !strings.HasSuffix(file.Name(), ".go") {
+				continue
+			}
+			if strings.HasSuffix(file.Name(), "_test.go") {
+				continue
+			}
+			fileNames = append(fileNames, strings.Replace(file.Name(), ".go", "", -1))
+		}
+		pathItem["files"] = fileNames
+		paths = append(paths, pathItem)
+	}
+	return paths, nil
+}
+
+// getFilesInDir 获取指定目录下的所有文件名称
+func getFilesInDir(dir string) ([]string, error) {
+	files := make([]string, 0)
+	if err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		// 判断是否为文件
+		if !info.IsDir() && strings.HasSuffix(info.Name(), ".go") {
+			files = append(files, strings.Replace(info.Name(), ".go", "", -1))
+		}
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+	return files, nil
+}
+
+// GetAllDirs 获取指定文件夹中所有文件夹路径
+func GetAllDirs(root string) ([]string, error) {
+	var dirs []string
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			dirs = append(dirs, path)
+		}
+		return nil
+	})
+	return dirs, err
+}
+
+// ToCamelCase 将字符串转换成驼峰写法
+func ToCamelCase(s string) string {
+	words := strings.FieldsFunc(s, func(r rune) bool {
+		return r == ' ' || r == '_' || r == '-' || r == '.' || r == '~' || r == ':'
+	})
+	var result string
+	for i, word := range words {
+		if i == 0 {
+			result += strings.ToLower(word)
+		} else {
+			result += strings.Title(word)
+		}
+	}
+	return result
 }

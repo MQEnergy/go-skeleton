@@ -4,9 +4,10 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/app/pkg/validator"
 	"go-skeleton/pkg/response"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type Controller struct{}

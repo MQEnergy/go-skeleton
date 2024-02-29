@@ -6,9 +6,10 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/urfave/cli/v2"
 	"go-skeleton/internal/command"
 	"go-skeleton/pkg/config"
+
+	"github.com/urfave/cli/v2"
 )
 
 var (
@@ -51,11 +52,8 @@ func Stack() *cli.App {
 			Destination: &config.ConfEnv,
 		},
 	}
-	app.Commands = []*cli.Command{
-		command.CommandCmd(), // 创建命令行工具
-		//	创建命令在此引用 如：command.FooCmd(), ...
+	app.Commands = command.New().WithCommands()
 
-	}
 	app.Action = func(ctx *cli.Context) error {
 		fmt.Println(fmt.Sprintf("\u001B[34m%s\u001B[0m", _UI))
 		fmt.Println(`一、开发模式

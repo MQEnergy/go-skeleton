@@ -8,9 +8,9 @@ import (
 
 	"go-skeleton/internal/bootstrap"
 	"go-skeleton/internal/router"
+	"go-skeleton/pkg/config"
 
 	"github.com/urfave/cli/v2"
-	"go-skeleton/pkg/config"
 )
 
 var (

@@ -2,16 +2,16 @@ package backend
 
 import (
 	"errors"
-	"github.com/golang-jwt/jwt/v5"
 	"strings"
-
-	"github.com/gofiber/fiber/v2"
-	"go-skeleton/internal/vars"
 
 	"go-skeleton/internal/app/models"
 	"go-skeleton/internal/request/user"
+	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/helper"
 	"go-skeleton/pkg/jwtauth"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type AuthService struct{}

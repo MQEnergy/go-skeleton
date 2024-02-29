@@ -4,8 +4,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/spf13/cast"
 	"go-skeleton/pkg/cache/smap"
+
+	"github.com/spf13/cast"
 )
 
 var ConfEnv string

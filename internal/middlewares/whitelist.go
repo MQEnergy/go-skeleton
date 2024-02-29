@@ -6,9 +6,10 @@ import (
 
 	"go-skeleton/internal/vars"
 
-	"github.com/gofiber/fiber/v2"
 	"go-skeleton/pkg/helper"
 	"go-skeleton/pkg/response"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 // WhiteIpMiddleware white list middleware

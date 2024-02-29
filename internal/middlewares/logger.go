@@ -3,10 +3,11 @@ package middlewares
 import (
 	"log/slog"
 
-	"github.com/gofiber/fiber/v2"
-	slogfiber "github.com/samber/slog-fiber"
 	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/logger"
+
+	"github.com/gofiber/fiber/v2"
+	slogfiber "github.com/samber/slog-fiber"
 )
 
 // LoggerMiddleware ...

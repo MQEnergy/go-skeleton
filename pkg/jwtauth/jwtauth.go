@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"go-skeleton/pkg/config"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type JWT struct {

@@ -6,14 +6,15 @@ import (
 
 	"go-skeleton/internal/vars"
 
+	"go-skeleton/pkg/helper"
+	"go-skeleton/pkg/response"
+
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/util"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	casbin2 "github.com/gofiber/contrib/casbin"
 	"github.com/gofiber/fiber/v2"
-	"go-skeleton/pkg/helper"
-	"go-skeleton/pkg/response"
 )
 
 //go:embed rbac_model.conf

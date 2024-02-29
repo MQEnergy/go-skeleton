@@ -1,11 +1,12 @@
 package backend
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/app/controller"
 	"go-skeleton/internal/app/service/backend"
 	"go-skeleton/internal/request/user"
 	"go-skeleton/pkg/response"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 type UserController struct {

@@ -1,8 +1,9 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"go-skeleton/internal/app/controller/backend"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 // InitBackendGroup 初始化后台接口路由

@@ -1,12 +1,13 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
 	"go-skeleton/internal/middlewares"
 	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/jwtauth"
 	"go-skeleton/pkg/response"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func InitCommonGroup(r fiber.Router, middleware ...fiber.Handler) {

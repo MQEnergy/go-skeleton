@@ -1,12 +1,13 @@
 package middlewares
 
 import (
+	"go-skeleton/internal/vars"
+	"go-skeleton/pkg/response"
+
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/golang-jwt/jwt/v5"
-	"go-skeleton/internal/vars"
-	"go-skeleton/pkg/response"
 )
 
 // AuthMiddleware jwt authentication middleware

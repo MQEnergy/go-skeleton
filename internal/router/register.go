@@ -1,15 +1,16 @@
 package router
 
 import (
+	"go-skeleton/internal/middlewares"
+	"go-skeleton/internal/router/routes"
+	"go-skeleton/pkg/response"
+
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
-	"go-skeleton/internal/middlewares"
-	"go-skeleton/internal/router/routes"
-	"go-skeleton/pkg/response"
 )
 
 // Register ...

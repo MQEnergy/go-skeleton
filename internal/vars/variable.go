@@ -4,9 +4,10 @@ import (
 	"path"
 	"runtime"
 
+	"go-skeleton/pkg/config"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/redis/go-redis/v9"
-	"go-skeleton/pkg/config"
 	"gorm.io/gorm"
 )
 

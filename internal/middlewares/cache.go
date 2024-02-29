@@ -4,10 +4,11 @@ import (
 	"strings"
 	"time"
 
+	"go-skeleton/pkg/helper"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/utils"
-	"go-skeleton/pkg/helper"
 )
 
 // CacheMiddleware http cache middleware
