@@ -22,7 +22,7 @@ var genTpl string
 var cmdTpl string
 
 var (
-	childPath   = "/internal/command/"
+	commandPath = "/internal/command/"
 	packageName = "command"
 )
 
@@ -71,7 +71,7 @@ func genCommand(name, dir string) error {
 	cmdDir := strings.ToLower(dir)
 	moduleName := helper.GetProjectModuleName()
 	fileName := fmt.Sprintf("%s.go", cmdName)
-	rootPath := vars.BasePath + childPath
+	rootPath := vars.BasePath + commandPath
 	caseCmdName := strings.Title(helper.ToCamelCase(cmdName))
 
 	// 创建目录
@@ -118,7 +118,7 @@ func genCommand(name, dir string) error {
 
 // handleComamnd ...
 func handleComamnd(moduleName string) error {
-	rootPath := vars.BasePath + childPath
+	rootPath := vars.BasePath + commandPath
 	cmdFileName := rootPath + "command.go"
 	commandNames := make([]string, 0)
 	importPackages := make([]string, 0)
@@ -137,7 +137,7 @@ func handleComamnd(moduleName string) error {
 		if path != "" {
 			pathArr := strings.Split(path, "/")
 			aliasName := pathArr[len(pathArr)-1] + helper.RandString(6)
-			path = fmt.Sprintf("%s \"%s\"", aliasName, moduleName+childPath+path)
+			path = fmt.Sprintf("%s \"%s\"", aliasName, moduleName+commandPath+path)
 			for _, s := range files {
 				filesList = append(filesList, fmt.Sprintf("&%s.%s{}", aliasName, strings.Title(helper.ToCamelCase(s))))
 			}

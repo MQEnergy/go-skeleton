@@ -15,20 +15,27 @@
 
 ### 基础功能
 
-### 生成model和dao
+### model和dao生成
+
+### command命令
+```shell
+# 查看帮助
+go run cmd/cli/main.go genCommand -h
+
+# 命令示例 -n: 命令行名称 -d: 命令存放目录 支持无限极子目录 如：foo/foo
+go run cmd/cli/main.go genCommand -n=foo [-d=foo]
+```
 
 ### 中间件
-middlewares目录定义中间件：
-```go
-package middlewares
+1、通过命令创建中间件
+```shell
+# 查看帮助
+go run cmd/cli/main.go genMiddleware -h
 
-func FooMiddleware() fiber.Handler {
-	return func(ctx fiber.Ctx) error {
-		// Todo: implement
-		return ctx.Next()
-    }
-}
+# 命令示例 -n: 命令行名称
+ go run cmd/cli/main.go genMiddleware -n=foo
 ```
+
 ### 日志
 
 ```go
