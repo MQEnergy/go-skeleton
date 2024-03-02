@@ -1,9 +1,9 @@
 package router
 
 import (
-	"go-skeleton/internal/middleware"
-	"go-skeleton/internal/router/routes"
-	"go-skeleton/pkg/response"
+	"github.com/MQEnergy/go-skeleton/internal/middleware"
+	"github.com/MQEnergy/go-skeleton/internal/router/routes"
+	"github.com/MQEnergy/go-skeleton/pkg/response"
 
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"

@@ -17,7 +17,7 @@ import (
 
 	"gorm.io/plugin/dbresolver"
 
-	"go-skeleton/internal/app/model"
+	"github.com/MQEnergy/go-skeleton/internal/app/model"
 )
 
 func newYfoAdmin(db *gorm.DB, opts ...gen.DOOption) yfoAdmin {

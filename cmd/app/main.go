@@ -6,9 +6,9 @@ import (
 	"runtime"
 	"time"
 
-	"go-skeleton/internal/bootstrap"
-	"go-skeleton/internal/router"
-	"go-skeleton/pkg/config"
+	"github.com/MQEnergy/go-skeleton/internal/bootstrap"
+	"github.com/MQEnergy/go-skeleton/internal/router"
+	"github.com/MQEnergy/go-skeleton/pkg/config"
 
 	"github.com/urfave/cli/v2"
 )

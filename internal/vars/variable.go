@@ -4,7 +4,7 @@ import (
 	"path"
 	"runtime"
 
-	"go-skeleton/pkg/config"
+	"github.com/MQEnergy/go-skeleton/pkg/config"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/redis/go-redis/v9"

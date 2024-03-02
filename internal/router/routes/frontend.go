@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"go-skeleton/internal/app/controller/backend"
+	"github.com/MQEnergy/go-skeleton/internal/app/controller/backend"
 
 	"github.com/gofiber/fiber/v2"
 )

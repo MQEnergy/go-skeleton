@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"go-skeleton/pkg/config"
+	"github.com/MQEnergy/go-skeleton/pkg/config"
 
 	"github.com/golang-jwt/jwt/v5"
 )

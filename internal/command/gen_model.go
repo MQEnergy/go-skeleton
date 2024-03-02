@@ -3,12 +3,12 @@ package command
 import (
 	"strings"
 
+	"github.com/MQEnergy/go-skeleton/internal/app/entity"
+	"github.com/MQEnergy/go-skeleton/internal/bootstrap"
+	"github.com/MQEnergy/go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/pkg/command"
+	"github.com/MQEnergy/go-skeleton/pkg/config"
 	"github.com/urfave/cli/v2"
-	"go-skeleton/internal/app/entity"
-	"go-skeleton/internal/bootstrap"
-	"go-skeleton/internal/vars"
-	"go-skeleton/pkg/command"
-	"go-skeleton/pkg/config"
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )

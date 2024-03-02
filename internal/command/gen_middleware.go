@@ -6,12 +6,12 @@ import (
 	"strings"
 	"text/template"
 
-	"go-skeleton/internal/vars"
-	"go-skeleton/pkg/helper"
+	"github.com/MQEnergy/go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
 
+	"github.com/MQEnergy/go-skeleton/internal/bootstrap"
+	"github.com/MQEnergy/go-skeleton/pkg/command"
 	"github.com/urfave/cli/v2"
-	"go-skeleton/internal/bootstrap"
-	"go-skeleton/pkg/command"
 )
 
 //go:embed tpls/gen_middleware.tpl

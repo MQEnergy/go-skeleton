@@ -4,10 +4,10 @@ import (
 	_ "embed"
 	"strings"
 
-	"go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/internal/vars"
 
-	"go-skeleton/pkg/helper"
-	"go-skeleton/pkg/response"
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
+	"github.com/MQEnergy/go-skeleton/pkg/response"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"

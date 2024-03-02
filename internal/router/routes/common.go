@@ -1,10 +1,10 @@
 package routes
 
 import (
-	"go-skeleton/internal/middleware"
-	"go-skeleton/internal/vars"
-	"go-skeleton/pkg/jwtauth"
-	"go-skeleton/pkg/response"
+	"github.com/MQEnergy/go-skeleton/internal/middleware"
+	"github.com/MQEnergy/go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/pkg/jwtauth"
+	"github.com/MQEnergy/go-skeleton/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"

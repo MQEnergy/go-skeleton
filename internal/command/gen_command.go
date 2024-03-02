@@ -7,9 +7,9 @@ import (
 	"strings"
 	"text/template"
 
-	"go-skeleton/internal/vars"
-	"go-skeleton/pkg/command"
-	"go-skeleton/pkg/helper"
+	"github.com/MQEnergy/go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/pkg/command"
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
 
 	"github.com/urfave/cli/v2"
 )

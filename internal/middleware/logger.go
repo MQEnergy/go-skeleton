@@ -3,8 +3,8 @@ package middleware
 import (
 	"log/slog"
 
-	"go-skeleton/internal/vars"
-	"go-skeleton/pkg/logger"
+	"github.com/MQEnergy/go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/pkg/logger"
 
 	"github.com/gofiber/fiber/v2"
 	slogfiber "github.com/samber/slog-fiber"

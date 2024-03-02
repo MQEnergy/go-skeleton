@@ -1,10 +1,10 @@
 package backend
 
 import (
-	"go-skeleton/internal/app/controller"
-	"go-skeleton/internal/app/service/backend"
-	"go-skeleton/internal/request/user"
-	"go-skeleton/pkg/response"
+	"github.com/MQEnergy/go-skeleton/internal/app/controller"
+	"github.com/MQEnergy/go-skeleton/internal/app/service/backend"
+	"github.com/MQEnergy/go-skeleton/internal/request/user"
+	"github.com/MQEnergy/go-skeleton/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

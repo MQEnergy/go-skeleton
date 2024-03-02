@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"go-skeleton/pkg/cache/smap"
+	"github.com/MQEnergy/go-skeleton/pkg/cache/smap"
 
 	"github.com/spf13/cast"
 )

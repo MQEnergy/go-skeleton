@@ -6,8 +6,8 @@ import (
 	"runtime"
 	"time"
 
-	"go-skeleton/internal/command"
-	"go-skeleton/pkg/config"
+	"github.com/MQEnergy/go-skeleton/internal/command"
+	"github.com/MQEnergy/go-skeleton/pkg/config"
 
 	"github.com/urfave/cli/v2"
 )

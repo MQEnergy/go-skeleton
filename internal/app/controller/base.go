@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"go-skeleton/internal/app/pkg/validator"
-	"go-skeleton/pkg/response"
+	"github.com/MQEnergy/go-skeleton/internal/app/pkg/validator"
+	"github.com/MQEnergy/go-skeleton/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 )

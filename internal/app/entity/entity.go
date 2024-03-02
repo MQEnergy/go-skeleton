@@ -1,8 +1,8 @@
 package entity
 
 import (
-	"go-skeleton/internal/app/entity/admin"
-	"go-skeleton/pkg/helper"
+	"github.com/MQEnergy/go-skeleton/internal/app/entity/admin"
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
 )
 
 type MethodMaps map[string][]any

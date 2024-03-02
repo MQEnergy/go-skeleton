@@ -5,7 +5,7 @@
 package command
 
 import (
-	"go-skeleton/pkg/command"
+	"github.com/MQEnergy/go-skeleton/pkg/command"
 
 	"github.com/urfave/cli/v2"
 )

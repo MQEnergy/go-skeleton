@@ -3,8 +3,8 @@ package command
 import (
 	"strings"
 
-	"go-skeleton/internal/app/entity"
-	"go-skeleton/pkg/helper"
+	"github.com/MQEnergy/go-skeleton/internal/app/entity"
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )

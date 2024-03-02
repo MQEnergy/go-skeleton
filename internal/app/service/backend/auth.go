@@ -4,15 +4,15 @@ import (
 	"errors"
 	"strings"
 
-	"go-skeleton/internal/app/dao"
-	"go-skeleton/internal/app/model"
+	"github.com/MQEnergy/go-skeleton/internal/app/dao"
+	"github.com/MQEnergy/go-skeleton/internal/app/model"
 
+	"github.com/MQEnergy/go-skeleton/internal/request/user"
+	"github.com/MQEnergy/go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
+	"github.com/MQEnergy/go-skeleton/pkg/jwtauth"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
-	"go-skeleton/internal/request/user"
-	"go-skeleton/internal/vars"
-	"go-skeleton/pkg/helper"
-	"go-skeleton/pkg/jwtauth"
 )
 
 type AuthService struct{}

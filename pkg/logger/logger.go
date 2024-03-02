@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"os"
 
-	"go-skeleton/pkg/config"
+	"github.com/MQEnergy/go-skeleton/pkg/config"
 
 	"gopkg.in/natefinch/lumberjack.v2"
 )
