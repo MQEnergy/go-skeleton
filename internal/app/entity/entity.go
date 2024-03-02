@@ -7,14 +7,12 @@ import (
 
 type MethodMaps map[string][]any
 
-var (
-	methodMaps = MethodMaps{
-		"yfo_admin": {
-			func(Querier) {},
-			func(admin.Querier) {},
-		},
-	}
-)
+var methodMaps = MethodMaps{
+	"yfo_admin": {
+		func(Querier) {},
+		func(admin.Querier) {},
+	},
+}
 
 // Load ...
 func Load(models []string) (tableMethods MethodMaps) {

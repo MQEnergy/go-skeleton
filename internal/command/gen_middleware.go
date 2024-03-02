@@ -3,10 +3,11 @@ package command
 import (
 	_ "embed"
 	"fmt"
-	"go-skeleton/internal/vars"
-	"go-skeleton/pkg/helper"
 	"strings"
 	"text/template"
+
+	"go-skeleton/internal/vars"
+	"go-skeleton/pkg/helper"
 
 	"github.com/urfave/cli/v2"
 	"go-skeleton/internal/bootstrap"
@@ -18,9 +19,7 @@ var genMid string
 
 type GenMiddleware struct{}
 
-var (
-	middlePath = "/internal/middlewares/"
-)
+var middlePath = "/internal/middlewares/"
 
 // Command ...
 func (g *GenMiddleware) Command() *cli.Command {

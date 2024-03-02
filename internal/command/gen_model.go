@@ -1,6 +1,8 @@
 package command
 
 import (
+	"strings"
+
 	"github.com/urfave/cli/v2"
 	"go-skeleton/internal/app/entity"
 	"go-skeleton/internal/bootstrap"
@@ -9,16 +11,13 @@ import (
 	"go-skeleton/pkg/config"
 	"gorm.io/gen"
 	"gorm.io/gorm"
-	"strings"
 )
 
 type GenModel struct{}
 
 // Command ...
 func (g *GenModel) Command() *cli.Command {
-	var (
-		models string
-	)
+	var models string
 
 	return &cli.Command{
 		Name:  "genModel",
@@ -35,7 +34,7 @@ func (g *GenModel) Command() *cli.Command {
 				Name:        "model",
 				Aliases:     []string{"m"},
 				Value:       "",
-				Usage:       "请输入模型名称 输入按照逗号分割 如：user,admin..., 如果不填生成全部模型",
+				Usage:       "请输入数据表名称 输入按照逗号分割 如：user,admin..., 如果不填生成全部模型",
 				Destination: &models,
 			},
 		},

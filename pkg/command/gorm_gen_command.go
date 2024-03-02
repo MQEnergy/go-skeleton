@@ -1,11 +1,12 @@
 package command
 
 import (
+	"strings"
+
 	"go-skeleton/internal/app/entity"
 	"go-skeleton/pkg/helper"
 	"gorm.io/gen"
 	"gorm.io/gorm"
-	"strings"
 )
 
 type GormGenCommand struct {

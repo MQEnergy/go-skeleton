@@ -4,14 +4,13 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"go-skeleton/internal/app/model"
 	"go-skeleton/internal/request/user"
 	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/helper"
 	"go-skeleton/pkg/jwtauth"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 type AuthService struct{}

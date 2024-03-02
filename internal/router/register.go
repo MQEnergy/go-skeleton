@@ -24,7 +24,7 @@ func Register(appName string) *fiber.App {
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return response.NotFoundException(c, err.Error())
 		},
-		DisableStartupMessage: true,         // When set to true, it will not print out debug information
+		DisableStartupMessage: false,        // When set to true, it will not print out debug information
 		AppName:               appName,      // This allows to setup app name for the app
 		JSONEncoder:           json.Marshal, // If you're not happy with the performance of encoding/json, we recommend you to use these libraries
 		JSONDecoder:           json.Unmarshal,
