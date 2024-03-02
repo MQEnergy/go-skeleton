@@ -13,6 +13,7 @@ import (
 // LoggerMiddleware ...
 func LoggerMiddleware() fiber.Handler {
 	return slogfiber.NewWithConfig(logger.New(
+		vars.Config.GetString("log.fileName"),
 		vars.Config,
 	), slogfiber.Config{
 		DefaultLevel:     slog.LevelInfo,

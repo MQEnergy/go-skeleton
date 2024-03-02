@@ -7,7 +7,6 @@ import (
 	"strings"
 	"text/template"
 
-	"go-skeleton/internal/bootstrap"
 	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/command"
 	"go-skeleton/pkg/helper"
@@ -53,9 +52,6 @@ func (g *GenCommand) Command() *cli.Command {
 				Destination: &dir,
 				Required:    false,
 			},
-		},
-		Before: func(c *cli.Context) error {
-			return bootstrap.InitConfig()
 		},
 		Action: func(c *cli.Context) error {
 			return genCommand(name, dir)

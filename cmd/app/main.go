@@ -62,10 +62,6 @@ func Stack() *cli.App {
 	}
 	app.Action = func(ctx *cli.Context) error {
 		fmt.Println(fmt.Sprintf("\u001B[34m%s\u001B[0m", _UI))
-		// loading configuration
-		if err := bootstrap.InitConfig(); err != nil {
-			return err
-		}
 		// bootstrap service
 		bootstrap.BootService()
 		// register routes and listen port

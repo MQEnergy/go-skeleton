@@ -31,11 +31,11 @@ func (s *AuthService) Login(reqParams *user.LoginReq) (fiber.Map, error) {
 		isSuper   = 0 // 是否超级管理员 1：是 0：不是
 		u         = dao.YfoAdmin
 		err       error
-		adminInfo model.YfoAdmin
+		adminInfo *model.YfoAdmin
 	)
 	adminInfo, err = u.GetByAccount(reqParams.Account)
 	if err != nil {
-		return nil, errors.New("账号或密码不正确 err: " + err.Error())
+		return nil, errors.New("账号或密码不正确")
 	}
 	if adminInfo.Status != 1 {
 		return nil, errors.New("用户已锁定，无法登录")

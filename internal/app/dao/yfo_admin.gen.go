@@ -213,7 +213,7 @@ type IYfoAdminDo interface {
 	GetByID(id int) (result model.YfoAdmin, err error)
 	FindAll() (result []model.YfoAdmin, err error)
 	FindOne() (result model.YfoAdmin)
-	GetByAccount(account string) (result model.YfoAdmin, err error)
+	GetByAccount(account string) (result *model.YfoAdmin, err error)
 }
 
 // SELECT * FROM @@table WHERE id = @id
@@ -256,7 +256,7 @@ func (y yfoAdminDo) FindOne() (result model.YfoAdmin) {
 }
 
 // SELECT * FROM @@table WHERE account = @account
-func (y yfoAdminDo) GetByAccount(account string) (result model.YfoAdmin, err error) {
+func (y yfoAdminDo) GetByAccount(account string) (result *model.YfoAdmin, err error) {
 	var params []interface{}
 
 	var generateSQL strings.Builder

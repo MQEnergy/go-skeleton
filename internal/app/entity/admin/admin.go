@@ -7,5 +7,5 @@ type Querier interface {
 	GetByID(id int) (gen.T, error)
 
 	// SELECT * FROM @@table WHERE account = @account
-	GetByAccount(account string) (gen.T, error)
+	GetByAccount(account string) (*gen.T, error)
 }

@@ -21,7 +21,7 @@ func (g *GenModel) Command() *cli.Command {
 
 	return &cli.Command{
 		Name:  "genModel",
-		Usage: "基于gorm的gen的代码生成器，生成数据表model，并生成model对应的方法。",
+		Usage: "基于gorm的gen的代码生成器，生成数据表model，并生成model对应的dao方法。",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "env",
@@ -39,9 +39,6 @@ func (g *GenModel) Command() *cli.Command {
 			},
 		},
 		Before: func(ctx *cli.Context) error {
-			if err := bootstrap.InitConfig(); err != nil {
-				return err
-			}
 			bootstrap.BootService(bootstrap.MysqlService)
 			return nil
 		},

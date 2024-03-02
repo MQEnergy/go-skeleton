@@ -38,11 +38,6 @@ func New(drive DriverInterface, config *gorm.Config, options ...Options) (*Datab
 	for _, option := range options {
 		option.apply(dbContainer)
 	}
-	// 新版本发现日志里出现大量record not found，屏蔽这里的日志 参考：https://github.com/go-gorm/gorm/issues/3789
-	dbContainer.DB.Callback().Query().Before("gorm:query").Register("disable_raise_record_not_found", func(d *gorm.DB) {
-		d.Statement.RaiseErrorOnNotFound = false
-	})
-
 	s, err := dbContainer.DB.DB()
 	if err != nil {
 		return nil, err

@@ -2,8 +2,12 @@ package bootstrap
 
 import (
 	"fmt"
+	"log"
 	"log/slog"
 	"time"
+
+	logger2 "go-skeleton/pkg/logger"
+	"gorm.io/gorm/logger"
 
 	"go-skeleton/internal/app/dao"
 	"go-skeleton/internal/vars"
@@ -15,7 +19,6 @@ import (
 
 	mysql2 "gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	logger2 "gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 )
 
@@ -38,6 +41,10 @@ var (
 
 // BootService Load service
 func BootService(services ...string) {
+	// loading configuration
+	if err := InitConfig(); err != nil {
+		panic("Failed to load config：" + err.Error())
+	}
 	if len(services) == 0 {
 		services = serviceMap.keys()
 	}
@@ -70,6 +77,7 @@ func InitConfig() error {
 		FileName: "config." + config.ConfEnv,
 	})
 	if err == nil {
+		slog.Info("Server.mode: " + vars.Config.GetString("server.mode"))
 		slog.Info("Loading Configuration successfully")
 	}
 	return err
@@ -89,6 +97,20 @@ func initMysql() error {
 		})
 	}
 	masterDsn := vars.Config.GetString("database.mysql.master")
+	logLevel := vars.Config.GetInt("database.mysql.loglevel")
+	newLogger := logger.New(
+		log.New(logger2.ApplyWriter(
+			vars.Config.GetString("database.mysql.fileName"),
+			vars.Config,
+		), "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             time.Second,               // Slow SQL threshold
+			LogLevel:                  logger.LogLevel(logLevel), // Log level
+			IgnoreRecordNotFoundError: true,                      // Ignore ErrRecordNotFound error for logger
+			ParameterizedQueries:      true,                      // Don't include params in the SQL log
+			Colorful:                  false,                     // Disable color
+		},
+	)
 	d, err := database.New(
 		dbContainer(masterDsn),
 		&gorm.Config{
@@ -96,7 +118,7 @@ func initMysql() error {
 				TablePrefix:   vars.Config.GetString("database.mysql.prefix"),
 				SingularTable: true, // 是否设置单数表名，设置为 是
 			},
-			Logger: logger2.Default.LogMode(logger2.LogLevel(vars.Config.GetInt("database.mysql.loglevel"))), // Todo
+			Logger: newLogger, // Todo
 		},
 		database.WithMaxIdleConn(vars.Config.GetInt("database.mysql.minIdleConn")),
 		database.WithMaxOpenConn(vars.Config.GetInt("database.mysql.maxOpenConn")),
