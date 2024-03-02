@@ -1,11 +1,43 @@
 # go-skeleton
 基于Go语言（版本：>=v1.22.0）和fiber框架的高性能高并发的Web项目骨架
 
-### 项目结构
+[![GoDoc](https://pkg.go.dev/badge/github.com/MQEnergy/go-skeleton)](https://github.com/MQEnergy/go-skeleton)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue?link=MQEnergy%2Fgo-skeleton)](https://github.com/MQEnergy/go-skeleton/blob/main/LICENSE)
+[![codebeat badge](https://codebeat.co/badges/09ce2b03-b0b1-40eb-9ac7-b91bccdb8c0d)](https://codebeat.co/projects/github-com-mqenergy-go-skeleton-main)
+## 一、项目结构
+```
+├── LICENSE
+├── Makefile
+├── README.md
+├── cmd
+│   ├── app   # 接口运行命令
+│   └── cli   # 命令行运行命令
+├── configs         # 配置文件
+├── database        # 数据表文件
+├── go.mod
+├── go.sum
+├── internal
+│   ├── app           # 模块目录
+│   ├── bootstrap     # 服务启动
+│   ├── command       # 命令行
+│   ├── middleware    # 中间件
+│   ├── request       # 请求参数绑定的结构体目录
+│   ├── router        # 路由
+│   └── vars          # 全局变量
+└── pkg
+    ├── cache         # 缓存类 redis sync.Map
+    ├── command       # 命令行接口定义
+    ├── config        # 配置加载类
+    ├── crontab       # 定时任务
+    ├── database      # 数据库类
+    ├── helper        # 帮助函数
+    ├── jwtauth       # jwt类
+    ├── logger        # 日志类
+    └── response      # 接口返回类
 
-### 功能点
+```
 
-### 运行项目
+## 二、运行项目
 ```shell
 go mod tidy
 
@@ -14,9 +46,23 @@ go run cmd/app/main.go
 
 # cli命令
 go run cmd/cli/main.go
+
+# 打包 查看帮助
+make help
+
+# 打包成window
+make windows
+
+# 打包成linux
+make linux
+
+# 打包成macos
+make darwin
 ```
 
-### 全局变量
+## 三、基础功能
+
+### 1、全局变量
 在internal/vars目录中可查看全局可用的参数
 ```go
 var (
@@ -27,13 +73,11 @@ var (
 	Config   *config.Config // 配置
 )
 ```
-### 数据迁移 migrate
+### 2、数据迁移 migrate
 
+### 3、上传资源
 
-
-## 二、基础功能
-
-### model和dao生成
+### 4、model和dao生成
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genModel -h
@@ -44,18 +88,16 @@ go run cmd/cli/main.go genModel -m=foo [-e=prod]
 entity目录可以定义模型查询接口 可参考：internal/entity/admin
 然后在entity.go中引入 参考如下：
 ```go
-var (
-	methodMaps = MethodMaps{
+var methodMaps = MethodMaps{
 		"yfo_admin": { // 表名称
 			func(Querier) {}, // 扩展的查询接口 可多个
 			func(admin.Querier) {},
 		},
 		// ...
 	}
-)
 ```
 
-### command命令
+### 5、command命令
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genCommand -h
@@ -64,7 +106,7 @@ go run cmd/cli/main.go genCommand -h
 go run cmd/cli/main.go genCommand -n=foo [-d=foo]
 ```
 
-### 中间件
+### 6、中间件
 1、通过命令创建中间件
 ```shell
 # 查看帮助
@@ -74,7 +116,7 @@ go run cmd/cli/main.go genMiddleware -h
 go run cmd/cli/main.go genMiddleware -n=foo
 ```
 
-### 日志
+### 7、日志
 ```go
 import "log/slog"
 
@@ -84,7 +126,7 @@ slog.Warning("Warning")
 slog.Debug("Debug")
 ```
 
-### 验证器
+### 8、验证器
 在controller中文件中直接调用Validate方法
 示例如下：
 ```go
@@ -113,7 +155,7 @@ func (c *FooController) Index(ctx *fiber.Ctx) error {
 }
 ```
 
-### 响应体
+### 9、响应体
 在pkg/response/response.go文件中
 ```go
 // 基础返回
@@ -124,7 +166,7 @@ response.SuccessJSON(ctx *fiber.Ctx, message string, data interface{})
 // ...
 ```
 
-### 格式化代码
+### 四、格式化代码
 ```shell
 # install
 go install mvdan.cc/gofumpt@latest
@@ -133,4 +175,4 @@ go install mvdan.cc/gofumpt@latest
 gofumpt -l -w .   
 ```
 
-### 单元测试
+### 五、单元测试
