@@ -33,11 +33,10 @@ go run cmd/cli/main.go genCommand -n=foo [-d=foo]
 go run cmd/cli/main.go genMiddleware -h
 
 # 命令示例 -n: 命令行名称
- go run cmd/cli/main.go genMiddleware -n=foo
+go run cmd/cli/main.go genMiddleware -n=foo
 ```
 
 ### 日志
-
 ```go
 import "log/slog"
 
@@ -46,6 +45,7 @@ slog.Error("Error")
 slog.Warning("Warning")
 slog.Debug("Debug")
 ```
+
 ### 验证器
 在controller中文件中直接调用Validate方法
 示例如下：

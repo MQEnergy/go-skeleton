@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"go-skeleton/internal/middlewares"
+	"go-skeleton/internal/middleware"
 	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/jwtauth"
 	"go-skeleton/pkg/response"
@@ -10,8 +10,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func InitCommonGroup(r fiber.Router, middleware ...fiber.Handler) {
-	router := r.Group("/", middleware...)
+func InitCommonGroup(r fiber.Router, handles ...fiber.Handler) {
+	router := r.Group("/", handles...)
 	{
 		j := jwtauth.New(vars.Config)
 
@@ -39,7 +39,7 @@ func InitCommonGroup(r fiber.Router, middleware ...fiber.Handler) {
 		})
 
 		// parse jwt token
-		router.Post("/token/view", middlewares.AuthMiddleware(), func(ctx *fiber.Ctx) error {
+		router.Post("/token/view", middleware.AuthMiddleware(), func(ctx *fiber.Ctx) error {
 			return response.SuccessJSON(ctx, "", fiber.Map{
 				"uid":      ctx.GetRespHeader("uid"),
 				"uuid":     ctx.GetRespHeader("uuid"),

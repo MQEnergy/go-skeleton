@@ -1,7 +1,7 @@
 package router
 
 import (
-	"go-skeleton/internal/middlewares"
+	"go-skeleton/internal/middleware"
 	"go-skeleton/internal/router/routes"
 	"go-skeleton/pkg/response"
 
@@ -16,8 +16,8 @@ import (
 // Register ...
 func Register(appName string) *fiber.App {
 	publicMiddleware := []fiber.Handler{
-		middlewares.LoggerMiddleware(),  // 日志
-		middlewares.WhiteIpMiddleware(), // 白名单
+		middleware.LoggerMiddleware(),  // 日志
+		middleware.WhiteIpMiddleware(), // 白名单
 	}
 
 	r := fiber.New(fiber.Config{
@@ -39,9 +39,9 @@ func Register(appName string) *fiber.App {
 	// common
 	routes.InitCommonGroup(r, publicMiddleware...)
 	// backend
-	routes.InitBackendGroup(r, middlewares.CasbinMiddleware(), middlewares.AuthMiddleware(), middlewares.CacheMiddleware())
+	routes.InitBackendGroup(r, middleware.CasbinMiddleware(), middleware.AuthMiddleware(), middleware.CacheMiddleware())
 	// frontend
-	routes.InitFrontendGroup(r, append(publicMiddleware, middlewares.AuthMiddleware())...)
+	routes.InitFrontendGroup(r, append(publicMiddleware, middleware.AuthMiddleware())...)
 
 	return r
 }

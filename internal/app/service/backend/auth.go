@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"go-skeleton/internal/app/models"
+	"go-skeleton/internal/app/model"
 	"go-skeleton/internal/request/user"
 	"go-skeleton/internal/vars"
 	"go-skeleton/pkg/helper"
@@ -27,7 +27,7 @@ var Auth = &AuthService{}
 // @author cx
 func (s *AuthService) Login(reqParams *user.LoginReq) (interface{}, error) {
 	var (
-		adminInfo models.YfoAdmin
+		adminInfo model.YfoAdmin
 		isSuper   = 0 // 是否超级管理员 1：是 0：不是
 	)
 	if err := vars.DB.First(&adminInfo, "account = ?", reqParams.Account).Error; err != nil {
@@ -41,8 +41,8 @@ func (s *AuthService) Login(reqParams *user.LoginReq) (interface{}, error) {
 	}
 	token, err := jwtauth.New(vars.Config).
 		WithClaims(jwt.MapClaims{
-			"id":       adminInfo.Id,
-			"uuid":     adminInfo.Uuid,
+			"id":       adminInfo.ID,
+			"uuid":     adminInfo.UUID,
 			"role_ids": adminInfo.RoleIds,
 		}).GenerateToken()
 	if err != nil {
@@ -54,8 +54,8 @@ func (s *AuthService) Login(reqParams *user.LoginReq) (interface{}, error) {
 	return fiber.Map{
 		"token": token,
 		"info": fiber.Map{
-			"id":       adminInfo.Id,
-			"uuid":     adminInfo.Uuid,
+			"id":       adminInfo.ID,
+			"uuid":     adminInfo.UUID,
 			"account":  adminInfo.Account,
 			"avatar":   adminInfo.Avatar,
 			"role_ids": adminInfo.RoleIds,
