@@ -213,7 +213,7 @@ type IYfoAdminDo interface {
 	GetByID(id int) (result model.YfoAdmin, err error)
 	FindAll() (result []model.YfoAdmin, err error)
 	FindOne() (result model.YfoAdmin)
-	GetByName(name string) (result model.YfoAdmin, err error)
+	GetByAccount(account string) (result model.YfoAdmin, err error)
 }
 
 // SELECT * FROM @@table WHERE id = @id
@@ -255,13 +255,13 @@ func (y yfoAdminDo) FindOne() (result model.YfoAdmin) {
 	return
 }
 
-// SELECT * FROM @@table WHERE name = @name
-func (y yfoAdminDo) GetByName(name string) (result model.YfoAdmin, err error) {
+// SELECT * FROM @@table WHERE account = @account
+func (y yfoAdminDo) GetByAccount(account string) (result model.YfoAdmin, err error) {
 	var params []interface{}
 
 	var generateSQL strings.Builder
-	params = append(params, name)
-	generateSQL.WriteString("SELECT * FROM yfo_admin WHERE name = ? ")
+	params = append(params, account)
+	generateSQL.WriteString("SELECT * FROM yfo_admin WHERE account = ? ")
 
 	var executeSQL *gorm.DB
 	executeSQL = y.UnderlyingDB().Raw(generateSQL.String(), params...).Take(&result) // ignore_security_alert

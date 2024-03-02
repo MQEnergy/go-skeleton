@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"time"
 
+	"go-skeleton/internal/app/dao"
 	"go-skeleton/internal/vars"
-
 	"go-skeleton/pkg/cache/redis"
 	"go-skeleton/pkg/config"
 	"go-skeleton/pkg/database"
@@ -115,6 +115,10 @@ func initMysql() error {
 		if err := d.WithSlaveDB([]gorm.Dialector{dbContainer(masterDsn).Instance()}, replicas); err != nil {
 			return err
 		}
+	}
+	// dao set db
+	if helper.IsPathExist(vars.BasePath + "/internal/app/dao/gen.go") {
+		dao.SetDefault(d.DB)
 	}
 	vars.DB = d.DB
 	return nil
