@@ -7,6 +7,7 @@ import (
 
 type MethodMaps map[string][]any
 
+// methodMaps 需手动添加配置
 var methodMaps = MethodMaps{
 	"yfo_admin": {
 		func(Querier) {},

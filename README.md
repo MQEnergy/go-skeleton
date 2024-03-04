@@ -47,6 +47,9 @@ go run cmd/app/main.go
 # cli命令
 go run cmd/cli/main.go
 
+# 热更新
+air
+
 # 打包 查看帮助
 make help
 
@@ -73,31 +76,48 @@ var (
 	Config   *config.Config // 配置
 )
 ```
-### 2、数据迁移 migrate
 
-### 3、上传资源
-
-### 4、model和dao生成
+### 2、model和dao生成
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genModel -h
 
 # 命令示例：-m: 数据表名称(不填是生成全部模型) -e: 环境：dev、test、prod
-go run cmd/cli/main.go genModel -m=foo [-e=prod]
+go run cmd/cli/main.go genModel [-m=foo] [-e=prod]
 ```
-entity目录可以定义模型查询接口 可参考：internal/entity/admin
-然后在entity.go中引入 参考如下：
+1、在entity目录中定义模型的查询接口 
+
+参考：[internal/app/entity/admin/admin.go](./internal/app/entity/admin/admin.go)
+
+代码如下：
+
 ```go
-var methodMaps = MethodMaps{
-		"yfo_admin": { // 表名称
-			func(Querier) {}, // 扩展的查询接口 可多个
-			func(admin.Querier) {},
-		},
-		// ...
-	}
+type Querier interface {
+	// SELECT * FROM @@table WHERE id = @id
+	GetByID(id int) (gen.T, error)
+
+	// SELECT * FROM @@table WHERE account = @account
+	GetByAccount(account string) (*gen.T, error)
+}
 ```
 
-### 5、command命令
+2、在entity.go文件中引入数据表的相关接口，
+
+参考：[internal/app/entity/entity.go](./internal/app/entity/entity.go)
+
+代码如下：
+
+```go
+var methodMaps = MethodMaps{
+    "yfo_admin": { // 表名称
+        func(Querier) {}, // 扩展的查询接口 可多个
+        func(admin.Querier) {},
+    },
+    // ...
+}
+```
+
+### 3、command命令
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genCommand -h
@@ -106,7 +126,7 @@ go run cmd/cli/main.go genCommand -h
 go run cmd/cli/main.go genCommand -n=foo [-d=foo]
 ```
 
-### 6、中间件
+### 4、中间件
 1、通过命令创建中间件
 ```shell
 # 查看帮助
@@ -116,7 +136,7 @@ go run cmd/cli/main.go genMiddleware -h
 go run cmd/cli/main.go genMiddleware -n=foo
 ```
 
-### 7、日志
+### 5、日志
 ```go
 import "log/slog"
 
@@ -126,7 +146,7 @@ slog.Warning("Warning")
 slog.Debug("Debug")
 ```
 
-### 8、验证器
+### 6、验证器
 在controller中文件中直接调用Validate方法
 示例如下：
 ```go
@@ -155,7 +175,7 @@ func (c *FooController) Index(ctx *fiber.Ctx) error {
 }
 ```
 
-### 9、响应体
+### 7、响应体
 在pkg/response/response.go文件中
 ```go
 // 基础返回
@@ -165,6 +185,11 @@ response.JSON(ctx *fiber.Ctx, status int, errcode Code, message string, data int
 response.SuccessJSON(ctx *fiber.Ctx, message string, data interface{})
 // ...
 ```
+
+### 8、数据迁移 migrate
+
+### 9、上传类
+
 
 ### 四、格式化代码
 ```shell
