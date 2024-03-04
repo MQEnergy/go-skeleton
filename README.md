@@ -77,7 +77,7 @@ var (
 )
 ```
 
-### 2、model和dao生成
+### 2、基于gorm/gen生成model和dao
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genModel -h
@@ -85,6 +85,9 @@ go run cmd/cli/main.go genModel -h
 # 命令示例：-m: 数据表名称(不填是生成全部模型) -e: 环境：dev、test、prod
 go run cmd/cli/main.go genModel [-m=foo] [-e=prod]
 ```
+
+参考文档：[https://gorm.io/zh_CN/gen/dynamic_sql.html](https://gorm.io/zh_CN/gen/dynamic_sql.html)
+
 1、在entity目录中定义模型的查询接口 
 
 参考：[internal/app/entity/admin/admin.go](./internal/app/entity/admin/admin.go)
