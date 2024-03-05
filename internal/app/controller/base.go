@@ -58,10 +58,10 @@ func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
 			contentType == "application/xml",
 			contentType == "text/xml",
 			strings.Contains(contentType, "multipart/form-data") == true:
-			if err := ctx.BodyParser(param); err != nil {
+			if err := ctx.QueryParser(param); err != nil {
 				errs = append(errs, err)
 			}
-			if err := ctx.QueryParser(param); err != nil {
+			if err := ctx.BodyParser(param); err != nil {
 				errs = append(errs, err)
 			}
 		}
@@ -72,7 +72,7 @@ func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
 			errs = append(errs, err)
 		}
 	}
-	// path
+	// path notice: get 和 post请求参数与path中参数名称一致 以path优先级最高
 	if err := ctx.ParamsParser(param); err != nil {
 		errs = append(errs, err)
 	}

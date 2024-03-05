@@ -41,7 +41,7 @@ func CasbinMiddleware() fiber.Handler {
 			if c.Path() == "/backend/auth/login" {
 				return c.Next()
 			}
-			return response.UnauthorizedException(c, "unauthorized")
+			return response.UnauthorizedException(c, "权限不足")
 		}, // unauthorized handler
 		Forbidden: func(c *fiber.Ctx) error {
 			return response.ForbiddenException(c, "forbidden")
