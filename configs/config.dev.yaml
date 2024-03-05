@@ -29,9 +29,9 @@ database:
     fileName: 'go-skeleton-sql' # 日志文件名称
     logLevel: 4 # 日志模式 1:slient 2:error 3:warn 4:info
     prefix: ""
-    master: 'root:123456@tcp(127.0.0.1:3306)/yfoperate?charset=utf8mb4&parseTime=True&loc=Local' # 主库链接地址
+    master: 'root:123456@tcp(127.0.0.1:3306)/go_skeleton?charset=utf8mb4&parseTime=True&loc=Local' # 主库链接地址
     slave:
-      - 'root:123456@tcp(127.0.0.1:3306)/yfoperate?charset=utf8mb4&parseTime=True&loc=Local' # 从库链接地址
+      - 'root:123456@tcp(127.0.0.1:3306)/go_skeleton?charset=utf8mb4&parseTime=True&loc=Local' # 从库链接地址
 #      - 'root:123456@tcp(127.0.0.1:3308)/go_skeleton?charset=utf8mb4&parseTime=True&loc=Local' # 从库链接地址
   mongo:
     enable: false
