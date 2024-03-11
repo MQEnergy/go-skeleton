@@ -29,6 +29,7 @@ func Register(appName string) *fiber.App {
 		JSONEncoder:           json.Marshal, // If you're not happy with the performance of encoding/json, we recommend you to use these libraries
 		JSONDecoder:           json.Unmarshal,
 	})
+
 	// middleware cors, compress, cache, X-Request-Id
 	r.Use(
 		recover.New(),
@@ -38,10 +39,18 @@ func Register(appName string) *fiber.App {
 	)
 	// common
 	routes.InitCommonGroup(r, publicMiddleware...)
-	// backend
-	routes.InitBackendGroup(r, middleware.CasbinMiddleware(), middleware.AuthMiddleware(), middleware.CacheMiddleware())
-	// frontend
-	routes.InitFrontendGroup(r, append(publicMiddleware, middleware.AuthMiddleware())...)
 
+	// backend
+	routes.InitBackendGroup(r,
+		middleware.AuthMiddleware(),   // jwt token middleware
+		middleware.CacheMiddleware(),  // http cache middleware
+		middleware.CasbinMiddleware(), // casbin middleware
+	)
+
+	// frontend
+	routes.InitFrontendGroup(r,
+		middleware.AuthMiddleware(),
+		middleware.CacheMiddleware(),
+	)
 	return r
 }

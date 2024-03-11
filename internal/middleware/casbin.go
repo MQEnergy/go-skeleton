@@ -50,19 +50,21 @@ func CasbinMiddleware() fiber.Handler {
 	return authz.RoutePermission()
 }
 
-// ParamsActMatchFunc 自定义规则函数
+// ParamsActMatchFunc 自定义规则函数 method
 func ParamsActMatchFunc(args ...interface{}) (interface{}, error) {
 	rAct := args[0].(string)
 	pAct := args[1].(string)
 	pActArr := strings.Split(pAct, ",")
-	return helper.InAnySlice[string](pActArr, rAct), nil
+	if len(pActArr) > 1 {
+		return helper.InAnySlice[string](pActArr, rAct), nil
+	}
+	return pActArr[0] == rAct, nil
 }
 
-// ParamsMatchFunc 自定义规则函数
+// ParamsMatchFunc 自定义规则函数 path
 func ParamsMatchFunc(args ...interface{}) (interface{}, error) {
-	name1 := args[0].(string)
-	name2 := args[1].(string)
-	key1 := strings.Split(name1, "?")[0]
-	// 剥离路径后再使用casbin的keyMatch2
-	return util.KeyMatch2(key1, name2), nil
+	rObj := args[0].(string)
+	pObj := args[1].(string)
+	rObj1 := strings.Split(rObj, "?")[0]
+	return util.KeyMatch2(rObj1, pObj), nil
 }

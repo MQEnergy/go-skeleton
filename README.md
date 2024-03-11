@@ -193,8 +193,10 @@ response.SuccessJSON(ctx *fiber.Ctx, message string, data interface{})
 
 ### 9、上传类
 
+### 四、单元测试
 
-### 四、格式化代码
+
+### 五、格式化代码
 ```shell
 # install
 go install mvdan.cc/gofumpt@latest
@@ -203,4 +205,12 @@ go install mvdan.cc/gofumpt@latest
 gofumpt -l -w .   
 ```
 
-### 五、单元测试
+### 六、检查shadow变量
+```shell
+# install
+go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
+
+# run path为shadow所在目录
+go vet -vettool={path}/shadow ./cmd/app/main.go 
+```
+
