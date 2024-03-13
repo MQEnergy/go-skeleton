@@ -39,6 +39,7 @@
 
 ## 二、运行项目
 ```shell
+# 安装依赖
 go mod tidy
 
 # web命令
@@ -50,11 +51,11 @@ go run cmd/cli/main.go
 # 热更新
 air
 
+# 查看帮助
+make help
+
 # 格式化代码
 make lint
-
-# 打包 查看帮助
-make help
 
 # 打包成window
 make windows
@@ -67,7 +68,7 @@ make darwin
 ```
 
 ## 三、基础功能
-RPC
+Continue ...
 
 ### 1、全局变量
 在internal/vars目录中可查看全局可用的参数
