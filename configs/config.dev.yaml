@@ -2,7 +2,7 @@ server:
   mode: 'dev'
   defaultPageSize: 10 # 默认分页条数
   maxPageSize: 500    # 最大分页条数
-  fileUploadPath: './' # 文件上传路径
+  fileUploadPath: 'upload' # 文件上传路径
   fileHostUrl: 'http://127.0.0.1:9527/' # 文件访问域名
   whiteList: '*' # 白名单
 jwt:
@@ -27,7 +27,7 @@ database:
     maxLifeTime: 60 # 设置连接可复用的最大时间（分钟）
     maxIdleTime: 0 # 设置连接池中保持空闲的最长时间（秒）默认是0 意味着连接池中的连接将保持打开状态
     fileName: 'go-skeleton-sql' # 日志文件名称
-    logLevel: 4 # 日志模式 1:slient 2:error 3:warn 4:info
+    logLevel: 1 # 日志模式 1:slient 2:error 3:warn 4:info
     prefix: ""
     master: 'root:123456@tcp(127.0.0.1:3306)/go_skeleton?charset=utf8mb4&parseTime=True&loc=Local' # 主库链接地址
     slave:

@@ -4,6 +4,8 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/gofiber/fiber/v2/utils"
+
 	"github.com/MQEnergy/go-skeleton/internal/app/pkg/validator"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
 
@@ -50,14 +52,18 @@ func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
 	// post
 	if ctx.Method() == fiber.MethodPost {
 		contentType := string(ctx.Request().Header.ContentType())
+		contentType = utils.ParseVendorSpecificContentType(contentType)
+		ctypeEnd := strings.IndexByte(contentType, ';')
+		if ctypeEnd != -1 {
+			contentType = contentType[:ctypeEnd]
+		}
 		switch {
 		case
-			contentType == "application/x-www-form-urlencoded",
-			contentType == "multipart/form-data",
-			contentType == "application/json",
-			contentType == "application/xml",
-			contentType == "text/xml",
-			strings.Contains(contentType, "multipart/form-data") == true:
+			strings.HasPrefix(contentType, fiber.MIMEApplicationForm),
+			strings.HasSuffix(contentType, "json"),
+			strings.HasPrefix(contentType, fiber.MIMEMultipartForm),
+			strings.HasPrefix(contentType, fiber.MIMETextXML),
+			strings.HasPrefix(contentType, fiber.MIMEApplicationXML):
 			if err := ctx.QueryParser(param); err != nil {
 				errs = append(errs, err)
 			}

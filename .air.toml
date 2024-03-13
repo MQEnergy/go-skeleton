@@ -3,10 +3,10 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-  bin = "./tmp/skeleton"
-  cmd = "go build -o ./tmp/skeleton ./cmd/app"
+  bin = "./tmp/skeleton" # ！！！注意在window下此配置是 ./tmp/skeleton.exe 不然可能导致router路由不加载 业务接口请求失效
+  cmd = "go build -o ./tmp/skeleton ./cmd/app" # ！！！注意在window下此配置是 go build -o ./tmp/skeleton.exe ./cmd/app
   delay = 1000
-  exclude_dir = ["assets", "tmp", "vendor", "testdata", "runtime"]
+  exclude_dir = ["assets", "tmp", "vendor", "testdata", "runtime", "upload"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false

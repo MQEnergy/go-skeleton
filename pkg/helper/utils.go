@@ -34,6 +34,26 @@ func InAnySlice[T comparable](haystack []T, needle T) bool {
 	return false
 }
 
+// InAnyMap 判断某个map的值是否存在
+func InAnyMap[T comparable](haystack map[string]T, needle T) bool {
+	for _, v := range haystack {
+		if v == needle {
+			return true
+		}
+	}
+	return false
+}
+
+// GetKeyByMap 根据map中的值获取键
+func GetKeyByMap[T comparable](m map[string]T, value T) string {
+	for key, val := range m {
+		if val == value {
+			return key
+		}
+	}
+	return ""
+}
+
 // GenerateBaseSnowId 生成雪花算法ID
 func GenerateBaseSnowId(num int, n *snowflake.Node) string {
 	if n == nil {
@@ -113,11 +133,7 @@ func IsPathExist(path string) bool {
 // MakeMultiDir 调用os.MkdirAll递归创建文件夹
 func MakeMultiDir(filePath string) error {
 	if !IsPathExist(filePath) {
-		err := os.MkdirAll(filePath, os.ModePerm)
-		if err != nil {
-			return err
-		}
-		return err
+		return os.MkdirAll(filePath, os.ModePerm)
 	}
 	return nil
 }
@@ -299,4 +315,17 @@ func ToCamelCase(s string) string {
 		}
 	}
 	return result
+}
+
+// ArrayChunk 数组分组
+func ArrayChunk[T any](arr []T, size int) [][]T {
+	var chunks [][]T
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+		if end > len(arr) {
+			end = len(arr)
+		}
+		chunks = append(chunks, arr[i:end])
+	}
+	return chunks
 }

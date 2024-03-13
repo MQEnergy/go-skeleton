@@ -60,7 +60,6 @@ func handleGenModel(models string) error {
 	newGenCommand, err := command.NewGenCommand(vars.DB, gen.Config{
 		OutPath:           "./internal/app/dao",
 		OutFile:           "",
-		ModelPkgPath:      "./internal/app/model",
 		WithUnitTest:      false,
 		Mode:              gen.WithDefaultQuery | gen.WithQueryInterface | gen.WithoutContext,
 		FieldNullable:     true,
