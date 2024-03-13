@@ -17,7 +17,7 @@ var Attachment = &AttachmentController{}
 
 // Upload 上传资源
 func (c *AttachmentController) Upload(ctx *fiber.Ctx) error {
-	reqParams := new(attachment.UploadReq)
+	reqParams := &attachment.UploadReq{}
 	if err := c.Validate(ctx, reqParams); err != nil {
 		return response.BadRequestException(ctx, err.Error())
 	}

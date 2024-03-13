@@ -14,31 +14,31 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-//go:embed tpls/gen_service.tpl
-var genServiceTpl string
+//go:embed tpls/gen_controller.tpl
+var genCtlTpl string
 
 var (
-	servicePath    = "/internal/app/service/"
-	servicePkgName = "service"
+	ctlPath    = "/internal/app/controller/"
+	ctlPkgName = "controller"
 )
 
-type GenService struct{}
+type GenController struct{}
 
 // Command ...
-func (g *GenService) Command() *cli.Command {
+func (g *GenController) Command() *cli.Command {
 	var (
 		name string
 		dir  string
 	)
 	return &cli.Command{
-		Name:  "genService",
-		Usage: "Create a new service",
+		Name:  "genController",
+		Usage: "Create a new controller",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "name",
 				Aliases:     []string{"n"},
 				Value:       "",
-				Usage:       "请输入service名称 如：user",
+				Usage:       "请输入controller名称 如：user",
 				Destination: &name,
 				Required:    true,
 			},
@@ -46,7 +46,7 @@ func (g *GenService) Command() *cli.Command {
 				Name:        "dir",
 				Aliases:     []string{"d"},
 				Value:       "",
-				Usage:       "请输入service目录 如：backend or backend/user",
+				Usage:       "请输入controller目录 如：backend or backend/user",
 				Destination: &dir,
 				Required:    false,
 			},
@@ -55,20 +55,20 @@ func (g *GenService) Command() *cli.Command {
 			return bootstrap.InitConfig()
 		},
 		Action: func(ctx *cli.Context) error {
-			return handleGenService(name, dir)
+			return handleGenController(name, dir)
 		},
 	}
 }
 
-var _ command.Interface = (*GenService)(nil)
+var _ command.Interface = (*GenController)(nil)
 
-// handleGenService ...
-func handleGenService(name, dir string) error {
+// handleGenController ...
+func handleGenController(name, dir string) error {
 	moduleName := helper.GetProjectModuleName()
 	cmdName := strings.ToLower(name)
 	cmdDir := strings.ToLower(dir)
 	fileName := fmt.Sprintf("%s.go", cmdName)
-	rootPath := vars.BasePath + servicePath
+	rootPath := vars.BasePath + ctlPath
 	caseCmdName := strings.Title(helper.ToCamelCase(cmdName))
 	// 创建目录
 	if cmdDir != "" {
@@ -77,7 +77,7 @@ func handleGenService(name, dir string) error {
 			return err
 		}
 		cmdDirs := strings.Split(cmdDir, "/")
-		servicePkgName = cmdDirs[len(cmdDirs)-1]
+		ctlPkgName = cmdDirs[len(cmdDirs)-1]
 	}
 	// 判断文件是否存在
 	if flag := helper.IsPathExist(rootPath + fileName); flag {
@@ -91,15 +91,16 @@ func handleGenService(name, dir string) error {
 	}
 
 	// 渲染模板
-	t1 := template.Must(template.New("genServiceTpl").Parse(genServiceTpl))
+	t1 := template.Must(template.New("genCtlTpl").Parse(genCtlTpl))
 	if err := t1.Execute(orPath, map[string]interface{}{
 		"ImportPackage": moduleName,
-		"PkgName":       servicePkgName,
-		"ServiceName":   caseCmdName,
+		"PkgName":       ctlPkgName,
+		"CtlName":       caseCmdName,
 		"CmdDir":        cmdDir,
 	}); err != nil {
 		return err
 	}
+
 	fmt.Println(fmt.Sprintf("\u001B[34m%s\u001B[0m", fileName+" created successfully"))
 	return nil
 }
