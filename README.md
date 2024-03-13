@@ -121,7 +121,7 @@ var methodMaps = MethodMaps{
 }
 ```
 
-### 3、command命令
+### 3、创建command命令
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genCommand -h
@@ -130,7 +130,25 @@ go run cmd/cli/main.go genCommand -h
 go run cmd/cli/main.go genCommand -n=foo [-d=foo]
 ```
 
-### 4、中间件
+### 4、创建controller
+```shell
+# 查看帮助
+go run cmd/cli/main.go genController -h
+
+# 命令示例 -n: 命令行名称 -d: 命令存放目录 支持无限极子目录 如：foo/foo
+go run cmd/cli/main.go genController -n=foo [-d=foo]
+```
+
+### 5、创建service
+```shell
+# 查看帮助
+go run cmd/cli/main.go genService -h
+
+# 命令示例 -n: 命令行名称 -d: 命令存放目录 支持无限极子目录 如：foo/foo
+go run cmd/cli/main.go genService -n=foo [-d=foo]
+```
+
+### 6、中间件
 1、通过命令创建中间件
 ```shell
 # 查看帮助
@@ -140,7 +158,7 @@ go run cmd/cli/main.go genMiddleware -h
 go run cmd/cli/main.go genMiddleware -n=foo
 ```
 
-### 5、日志
+### 7、日志
 ```go
 import "log/slog"
 
@@ -150,7 +168,7 @@ slog.Warning("Warning")
 slog.Debug("Debug")
 ```
 
-### 6、验证器
+### 8、验证器
 在controller中文件中直接调用Validate方法
 示例如下：
 ```go
@@ -179,7 +197,7 @@ func (c *FooController) Index(ctx *fiber.Ctx) error {
 }
 ```
 
-### 7、响应体
+### 9、响应体
 在pkg/response/response.go文件中
 ```go
 // 基础返回
@@ -190,9 +208,16 @@ response.SuccessJSON(ctx *fiber.Ctx, message string, data interface{})
 // ...
 ```
 
-### 8、数据迁移 migrate
+### 10、数据迁移 migrate
 
-### 9、上传类
+### 11、上传类
+参考：
+
+1、调用
+[internal/app/controller/backend/attachment.go](./internal/app/controller/backend/attachment.go)
+
+2、组件
+[pkg/upload/upload.go](./pkg/upload/upload.go)
 
 ### 四、单元测试
 
