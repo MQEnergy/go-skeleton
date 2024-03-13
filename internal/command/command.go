@@ -18,6 +18,7 @@ func (c *Command) RegisterCmds() []command.Interface {
 	return []command.Interface{
 		&GenCommand{},
 		&GenMiddleware{},
+		&GenService{},
 		&GenModel{},
 	}
 }

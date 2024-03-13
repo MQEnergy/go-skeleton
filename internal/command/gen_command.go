@@ -22,7 +22,7 @@ var cmdTpl string
 
 var (
 	commandPath = "/internal/command/"
-	packageName = "command"
+	commandName = "command"
 )
 
 type GenCommand struct{}
@@ -77,7 +77,7 @@ func genCommand(name, dir string) error {
 			return err
 		}
 		cmdDirs := strings.Split(cmdDir, "/")
-		packageName = cmdDirs[len(cmdDirs)-1]
+		commandName = cmdDirs[len(cmdDirs)-1]
 	}
 	// 判断文件是否存在
 	if flag := helper.IsPathExist(rootPath + fileName); flag {
@@ -93,12 +93,11 @@ func genCommand(name, dir string) error {
 	// 渲染模板
 	t1 := template.Must(template.New("gentpl").Parse(genTpl))
 	if err := t1.Execute(orPath, map[string]interface{}{
-		"PkgName":       packageName,
+		"PkgName":       commandName,
 		"CmdName":       caseCmdName,
 		"ImportPackage": moduleName,
 		"Name":          helper.ToCamelCase(cmdName),
 		"Usage":         caseCmdName + "命令工具",
-		"CmdDir":        cmdDir,
 	}); err != nil {
 		return err
 	}

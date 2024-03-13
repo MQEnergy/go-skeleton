@@ -14,19 +14,25 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-//go:embed tpls/gen_middleware.tpl
-var genMidTpl string
+//go:embed tpls/gen_service.tpl
+var genServiceTpl string
 
-type GenMiddleware struct{}
+var (
+	servicePath    = "/internal/app/service/"
+	servicePkgName = "service"
+)
 
-var middlePath = "/internal/middleware/"
+type GenService struct{}
 
 // Command ...
-func (g *GenMiddleware) Command() *cli.Command {
-	var name string
+func (g *GenService) Command() *cli.Command {
+	var (
+		name string
+		dir  string
+	)
 	return &cli.Command{
-		Name:  "genMiddleware",
-		Usage: "Create a new middleware",
+		Name:  "genService",
+		Usage: "Create a new service",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "name",
@@ -36,24 +42,43 @@ func (g *GenMiddleware) Command() *cli.Command {
 				Destination: &name,
 				Required:    true,
 			},
+			&cli.StringFlag{
+				Name:        "dir",
+				Aliases:     []string{"d"},
+				Value:       "",
+				Usage:       "请输入命令工具目录 如：test",
+				Destination: &dir,
+				Required:    false,
+			},
 		},
 		Before: func(ctx *cli.Context) error {
 			return bootstrap.InitConfig()
 		},
 		Action: func(ctx *cli.Context) error {
-			return handleGenMiddleware(name)
+			return handleGenService(name, dir)
 		},
 	}
 }
 
-var _ command.Interface = (*GenMiddleware)(nil)
+var _ command.Interface = (*GenService)(nil)
 
-// handleGenMiddleware ...
-func handleGenMiddleware(name string) error {
+// handleGenService ...
+func handleGenService(name, dir string) error {
+	moduleName := helper.GetProjectModuleName()
 	cmdName := strings.ToLower(name)
+	cmdDir := strings.ToLower(dir)
 	fileName := fmt.Sprintf("%s.go", cmdName)
-	rootPath := vars.BasePath + middlePath
+	rootPath := vars.BasePath + servicePath
 	caseCmdName := strings.Title(helper.ToCamelCase(cmdName))
+	// 创建目录
+	if cmdDir != "" {
+		rootPath += fmt.Sprintf("%s/", cmdDir)
+		if err := helper.MakeMultiDir(rootPath); err != nil {
+			return err
+		}
+		cmdDirs := strings.Split(cmdDir, "/")
+		servicePkgName = cmdDirs[len(cmdDirs)-1]
+	}
 	// 判断文件是否存在
 	if flag := helper.IsPathExist(rootPath + fileName); flag {
 		fmt.Println(fmt.Sprintf("\x1b[31m%s\x1b[0m", cmdName+".go already existed"))
@@ -64,10 +89,14 @@ func handleGenMiddleware(name string) error {
 	if err != nil {
 		return err
 	}
+
 	// 渲染模板
-	t1 := template.Must(template.New("genMidTpl").Parse(genMidTpl))
+	t1 := template.Must(template.New("genServiceTpl").Parse(genServiceTpl))
 	if err := t1.Execute(orPath, map[string]interface{}{
-		"CmdName": caseCmdName,
+		"ImportPackage": moduleName,
+		"PkgName":       servicePkgName,
+		"ServiceName":   caseCmdName,
+		"CmdDir":        cmdDir,
 	}); err != nil {
 		return err
 	}

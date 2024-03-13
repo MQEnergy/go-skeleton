@@ -4,6 +4,8 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/MQEnergy/go-skeleton/internal/app/service"
+
 	"github.com/MQEnergy/go-skeleton/internal/app/dao"
 	"github.com/MQEnergy/go-skeleton/internal/app/model"
 
@@ -15,7 +17,9 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type AuthService struct{}
+type AuthService struct {
+	service.Service
+}
 
 var Auth = &AuthService{}
 

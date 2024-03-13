@@ -64,6 +64,7 @@ make darwin
 ```
 
 ## 三、基础功能
+RPC
 
 ### 1、全局变量
 在internal/vars目录中可查看全局可用的参数

@@ -22,7 +22,11 @@ darwin:
 
 .PHONY: lint
 lint:
-	@golint ./...
+	@if ! command -v gofumpt &> /dev/null; then \
+		echo "gofumpt not found, installing..."; \
+		@go install mvdan.cc/gofumpt@latest; \
+	fi
+	@gofumpt -l -w .
 
 .PHONY: generate
 generate:
@@ -39,6 +43,6 @@ help:
 	@echo "2. make windows - [make window package]"
 	@echo "3. make linux - [make linux package]"
 	@echo "4. make darwin - [make darwin package]"
-	@echo "5. make lint - [golint ./...]"
+	@echo "5. make lint - [gofumpt -l -w .]"
 	@echo "6. make generate - [go generate -x]"
 	@echo "7. make clean - [remove releases files and cached files]"
