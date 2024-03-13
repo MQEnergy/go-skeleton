@@ -50,6 +50,9 @@ go run cmd/cli/main.go
 # 热更新
 air
 
+# 格式化代码
+make lint
+
 # 打包 查看帮助
 make help
 
