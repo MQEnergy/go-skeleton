@@ -18,13 +18,12 @@ func AuthMiddleware() fiber.Handler {
 			return response.UnauthorizedException(c, err.Error())
 		},
 		SuccessHandler: func(ctx *fiber.Ctx) error {
-			user, ok := ctx.Locals("user").(*jwt.Token)
-			if ok {
+			if user, ok := ctx.Locals("user").(*jwt.Token); ok {
 				if claims, ok := user.Claims.(jwt.MapClaims); ok && user.Valid {
 					if sub, ok := claims["sub"].(map[string]interface{}); ok {
-						ctx.Set("uuid", sub["uuid"].(string))
+						ctx.Set("uuid", cast.ToString(sub["uuid"]))
 						ctx.Set("uid", cast.ToString(sub["id"]))
-						ctx.Set("role_ids", sub["role_ids"].(string))
+						ctx.Set("role_ids", cast.ToString(sub["role_ids"]))
 						return ctx.Next()
 					}
 				}
