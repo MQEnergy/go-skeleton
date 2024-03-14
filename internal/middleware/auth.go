@@ -3,10 +3,10 @@ package middleware
 import (
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
+	"github.com/spf13/cast"
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -23,7 +23,7 @@ func AuthMiddleware() fiber.Handler {
 				if claims, ok := user.Claims.(jwt.MapClaims); ok && user.Valid {
 					if sub, ok := claims["sub"].(map[string]interface{}); ok {
 						ctx.Set("uuid", sub["uuid"].(string))
-						ctx.Set("uid", gconv.String(sub["id"]))
+						ctx.Set("uid", cast.ToString(sub["id"]))
 						ctx.Set("role_ids", sub["role_ids"].(string))
 						return ctx.Next()
 					}

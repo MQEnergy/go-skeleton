@@ -42,13 +42,19 @@
 # 安装依赖
 go mod tidy
 
-# web命令
-go run cmd/app/main.go
+# web命令 e: 支持三种环境变量 p: 端口号（默认9527）
+go run cmd/app/main.go [-e=dev|test|prod] [-p=9527...]
+
+# 查看帮助
+go run cmd/app/main.go -h
+go run cmd/cli/main.go -h
 
 # cli命令
-go run cmd/cli/main.go
+go run cmd/cli/main.go [-e=dev|test|prod]
 
 # 热更新
+# 安装热更新
+go instsall 
 air
 
 # 查看帮助
@@ -243,4 +249,5 @@ go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 # run path为shadow所在目录
 go vet -vettool={path}/shadow ./cmd/app/main.go 
 ```
+
 

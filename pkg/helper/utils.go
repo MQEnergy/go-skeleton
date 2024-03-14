@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/spf13/cast"
 	"io"
 	"io/ioutil"
 	"math/rand/v2"
@@ -19,7 +20,6 @@ import (
 
 	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/text/gstr"
-	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/hashicorp/go-uuid"
 	"gorm.io/gorm/schema"
 )
@@ -77,7 +77,7 @@ func GenerateBaseSnowId(num int, n *snowflake.Node) string {
 	case 64:
 		return id.Base64()
 	default:
-		return gconv.String(id.Int64())
+		return cast.ToString(id.Int64())
 	}
 }
 
