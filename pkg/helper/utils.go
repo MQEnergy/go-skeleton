@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/spf13/cast"
 	"io"
 	"io/ioutil"
 	"math/rand/v2"
@@ -21,6 +20,7 @@ import (
 	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/hashicorp/go-uuid"
+	"github.com/spf13/cast"
 	"gorm.io/gorm/schema"
 )
 
