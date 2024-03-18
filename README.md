@@ -1,9 +1,12 @@
 # go-skeleton
 基于Go语言（版本：>=v1.22.0）和fiber框架的高性能高并发的Web项目骨架
 
+# 持续更新中...
+
 [![GoDoc](https://pkg.go.dev/badge/github.com/MQEnergy/go-skeleton)](https://github.com/MQEnergy/go-skeleton)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue?link=MQEnergy%2Fgo-skeleton)](https://github.com/MQEnergy/go-skeleton/blob/main/LICENSE)
 [![codebeat badge](https://codebeat.co/badges/09ce2b03-b0b1-40eb-9ac7-b91bccdb8c0d)](https://codebeat.co/projects/github-com-mqenergy-go-skeleton-main)
+
 ## 一、项目结构
 ```
 ├── LICENSE
@@ -54,7 +57,7 @@ go run cmd/cli/main.go [-e=dev|test|prod]
 
 # 热更新
 # 安装热更新
-go instsall 
+go install github.com/cosmtrek/air@latest
 air
 
 # 查看帮助
@@ -74,7 +77,6 @@ make darwin
 ```
 
 ## 三、基础功能
-Continue ...
 
 ### 1、全局变量
 在internal/vars目录中可查看全局可用的参数
@@ -185,8 +187,8 @@ slog.Debug("Debug")
 package backend
 
 import (
-	"go-skeleton/pkg/response"
-	"go-skeleton/internal/app/controller"
+	"github.com/MQEnergy/go-skeleton/pkg/response"
+	"github.com/MQEnergy/go-skeleton/internal/app/controller"
 )
 type FooController struct {
 	controller.Controller
@@ -199,8 +201,8 @@ type IndexReq struct {
 
 // Index ...
 func (c *FooController) Index(ctx *fiber.Ctx) error {
-    params := &IndexReq{}
-    if err := c.Validate(ctx, params); err != nil {
+    var params IndexReq
+    if err := c.Validate(ctx, &params); err != nil {
     return response.BadRequestException(ctx, err.Error())
     }
     return response.SuccessJSON(ctx, "", "index")
@@ -208,7 +210,7 @@ func (c *FooController) Index(ctx *fiber.Ctx) error {
 ```
 
 ### 9、响应体
-在pkg/response/response.go文件中
+在[pkg/response/response.go](./pkg/response/response.go)文件中
 ```go
 // 基础返回
 response.JSON(ctx *fiber.Ctx, status int, errcode Code, message string, data interface{})
@@ -228,6 +230,21 @@ response.SuccessJSON(ctx *fiber.Ctx, message string, data interface{})
 
 2、组件
 [pkg/upload/upload.go](./pkg/upload/upload.go)
+
+### 12、service查询数据
+查看[service/backend/auth.go](./internal/app/service/backend/auth.go)
+
+```go
+var (
+    u         = dao.YfoAdmin
+)
+adminInfo, err = u.GetByAccount(reqParams.Account) // 这个是entity暴露的查询方法 可查看entity/admin/admin.go文件
+```
+
+```
+dao.{数据模型}.{查询方法}
+```
+
 
 ### 四、单元测试
 
@@ -250,4 +267,7 @@ go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 go vet -vettool={path}/shadow ./cmd/app/main.go 
 ```
 
+### 七、注意
+#### 1、air配置文件 .air.toml在不同环境下需要修改
+注意查看[.air.toml](.air.toml)文件
 

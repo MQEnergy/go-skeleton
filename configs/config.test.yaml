@@ -62,3 +62,8 @@ oss:
   accessKeyId: ''
   accessKeySecret: ''
   bucketName: ''
+wecom: # 企业微信
+  corpId: ''  # 企业ID
+  corpSecret: '' # 企业微信应用密钥
+  agentId:  # 企业微信应用ID
+  oauthCallback: '' # 企业微信回调地址
