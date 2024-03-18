@@ -1,6 +1,8 @@
 package config
 
 import (
+	"bytes"
+	"github.com/MQEnergy/go-skeleton/configs"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -20,15 +22,20 @@ func NewViper() *Viper {
 // Apply 创建实例
 func (v *Viper) Apply(option Options) error {
 	v.option = option
+
 	v2 := viper.New()
-	v2.AddConfigPath(option.BasePath + "/configs")
-	if strings.TrimSpace(option.FileName) == "" {
-		v2.SetConfigName("config")
+	v2.SetConfigType(v.option.Ctype)
+	v2.AddConfigPath(v.option.BasePath + "/configs")
+	if strings.TrimSpace(v.option.FileName) == "" {
+		v2.SetConfigName("config.dev")
 	} else {
-		v2.SetConfigName(option.FileName)
+		v2.SetConfigName(v.option.FileName)
 	}
-	v2.SetConfigType(option.Ctype)
-	if err := v2.ReadInConfig(); err != nil {
+	yamlConf, err := configs.TemplateFs.ReadFile(v.option.FileName + ".yaml")
+	if err != nil {
+		return err
+	}
+	if err := v2.ReadConfig(bytes.NewBuffer(yamlConf)); err != nil {
 		return err
 	}
 	v.viper = v2
