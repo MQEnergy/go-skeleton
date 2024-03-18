@@ -2,8 +2,9 @@ package config
 
 import (
 	"bytes"
-	"github.com/MQEnergy/go-skeleton/configs"
 	"strings"
+
+	"github.com/MQEnergy/go-skeleton/configs"
 
 	"github.com/spf13/viper"
 )
