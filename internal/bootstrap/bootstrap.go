@@ -139,9 +139,7 @@ func initMysql() error {
 		}
 	}
 	// dao set db
-	if helper.IsPathExist(vars.BasePath + "/internal/app/dao/gen.go") {
-		dao.SetDefault(d.DB)
-	}
+	dao.SetDefault(d.DB)
 	vars.DB = d.DB
 	return nil
 }
