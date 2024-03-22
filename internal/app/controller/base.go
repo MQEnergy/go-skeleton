@@ -70,6 +70,10 @@ func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
 			if err := ctx.BodyParser(param); err != nil {
 				errs = append(errs, err)
 			}
+		default:
+			if err := ctx.QueryParser(param); err != nil {
+				errs = append(errs, err)
+			}
 		}
 	}
 	// get
