@@ -59,6 +59,7 @@ func BootService(services ...string) {
 			BootedService = append(BootedService, k)
 		}
 	}
+	initLogger()
 	// load dao
 	LoadDao()
 }
@@ -209,4 +210,12 @@ func initRedis() error {
 		MaxIdleTime: vars.Config.GetDuration("redis.maxIdleTime") * time.Minute,
 	})
 	return err
+}
+
+// initLogger ...
+func initLogger() {
+	logger2.New(
+		vars.Config.GetString("log.fileName"),
+		vars.Config,
+	)
 }

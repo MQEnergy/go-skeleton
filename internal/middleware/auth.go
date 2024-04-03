@@ -4,6 +4,7 @@ import (
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
 	"github.com/spf13/cast"
+	"strings"
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
@@ -15,7 +16,7 @@ func AuthMiddleware() fiber.Handler {
 	return jwtware.New(jwtware.Config{
 		SigningKey: jwtware.SigningKey{Key: []byte(vars.Config.GetString("jwt.secret"))},
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
-			return response.UnauthorizedException(c, err.Error())
+			return response.UnauthorizedException(c, "会话已过期，请重新登录 err: "+err.Error())
 		},
 		SuccessHandler: func(ctx *fiber.Ctx) error {
 			if user, ok := ctx.Locals("user").(*jwt.Token); ok {
@@ -31,7 +32,7 @@ func AuthMiddleware() fiber.Handler {
 			return response.UnauthorizedException(ctx, "token is invalid")
 		},
 		Filter: func(ctx *fiber.Ctx) bool {
-			if ctx.Path() == "/backend/auth/login" {
+			if strings.HasPrefix(ctx.Path(), "/backend/auth/login") {
 				return true
 			}
 			return false
