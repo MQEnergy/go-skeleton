@@ -3,6 +3,11 @@
 
 # 持续更新中...
 
+基于go-skeleton + Vue3 + arco.design 开发的插件化后台管理系统 敬请期待~
+
+项目地址：[https://github.com/MQEnergy/mqshop](https://github.com/MQEnergy/mqshop)
+
+
 [![GoDoc](https://pkg.go.dev/badge/github.com/MQEnergy/go-skeleton)](https://github.com/MQEnergy/go-skeleton)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue?link=MQEnergy%2Fgo-skeleton)](https://github.com/MQEnergy/go-skeleton/blob/main/LICENSE)
 [![codebeat badge](https://codebeat.co/badges/09ce2b03-b0b1-40eb-9ac7-b91bccdb8c0d)](https://codebeat.co/projects/github-com-mqenergy-go-skeleton-main)
@@ -316,3 +321,7 @@ go vet -vettool={path}/shadow ./cmd/app/main.go
 #### 1、air配置文件 .air.toml在不同环境下需要修改
 注意查看[.air.toml](.air.toml)文件
 
+### benchmark (Todo)
+```bash
+wrk -t12 -c1000 -d30s --script=benchmark/login.lua --latency http://127.0.0.1:9527/backend/auth/login
+```
