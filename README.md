@@ -39,6 +39,30 @@
     └── response      # 接口返回类
 
 ```
+#### 目前已集成和实现：
+- [x] 支持 [jwt](https://github.com/golang/jwt-go) Authorization token验证组件
+- [x] 支持 [cors](https://github.com/gofiber/contrib/cors) 跨域组件
+- [x] 支持 [gorm](https://gorm.io) 数据库操作组件
+- [x] 支持 [redis](https://github.com/go-redis/redis) cache组件
+- [x] 支持 [slog](https://github.com/samber/slog-fiber) 日志组件
+- [x] 支持 [controller、service、model、middleware、command](https://github.com/MQEnergy/go-skeleton/tree/main/internal/command) 命令行方式生成代码工具
+- [x] 支持 [casbin](https://github.com/casbin/casbin) rbac权限 集成于中间件中 [casbin.go](https://github.com/MQEnergy/go-skeleton/blob/main/internal/middleware/casbin.go)
+- [x] 支持 [viper](https://github.com/spf13/viper) yaml、json、toml等配置文件解析组件
+- [x] 支持 [validator](https://github.com/go-playground/validator) 数据字段验证器组件，同时支持中文
+- [x] 支持 [snowflake](https://github.com/bwmarrin/snowflake) 生成雪花算法全局唯一ID
+- [x] 实现 ip白名单配置 集成于中间件中 [whitelist.go](https://github.com/MQEnergy/go-skeleton/blob/main/internal/middleware/whitelist.go)
+- [x] 实现 [code](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/response/code.go) 统一定义的返回码，[exception](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/response/response.go) 统一错误返回处理组件
+- [x] 实现 [wecom](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/wecom/wecom.go) 企业微信组件
+- [x] 实现 [oss](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/oss/oss.go) 阿里云oss组件
+
+#### 下一步计划：
+- [ ] 支持 cron 定时任务
+- [ ] 支持 pprof 性能剖析组件
+- [ ] 支持 trace 项目内部链路追踪
+- [ ] 支持 [rate](https://pkg.go.dev/golang.org/x/time/rate) 接口限流组件
+- [ ] 支持 [grpc](https://github.com/grpc/grpc-go) rpc组件
+- [ ] 支持 [go-rabbitmq](https://github.com/MQEnergy/go-rabbitmq) 消息队列组件 基于rabbitmq官方 [amqp](https://github.com/streadway/amqp) 组件封装实现的消费者和生产者
+- [ ] 实现 ticker 定时器组件
 
 ## 二、运行项目
 ```shell
@@ -78,6 +102,8 @@ make darwin
 
 ## 三、基础功能
 
+配置文件存在于[configs](configs)
+
 ### 1、全局变量
 在internal/vars目录中可查看全局可用的参数
 ```go
@@ -95,10 +121,29 @@ var (
 # 查看帮助
 go run cmd/cli/main.go genModel -h
 
-# 命令示例：-m: 数据表名称(不填是生成全部模型) -e: 环境：dev、test、prod
-go run cmd/cli/main.go genModel [-m=foo] [-e=prod]
+# 命令示例：
+# -m: 数据表名称(不填是生成别名为default的数据库的全部模型)
+# -e: dev、test、prod(默认环境：dev) 
+# -a: 数据库别名（在yaml配置文件中database.mysql.sources.alias里面配置）(默认：default)
+go run cmd/cli/main.go genModel [-m=foo] [-e=prod] [-a=demo]
 ```
 
+命令使用-a参数 会生成新的dao目录，
+使用需要在[bootstrap/bootstrap.go](internal/bootstrap/bootstrap.go)中 LoadDao函数中配置使用
+```go
+// LoadDao 如果多数据库需要手动配置...
+func LoadDao() {
+    // dao default set
+    // if vars.DB != nil {
+    //	 dao.SetDefault(vars.DB)
+    // }
+    
+    // 此处自行配置其他dao配置 ... 执行 go run cmd/cli/main.go genModel -a=demo 会生成daodemo目录
+    // if vars.MDB["demo"] != nil {
+    //	 daodemo.SetDefault(vars.MDB["demo"])
+    // }
+}
+```
 参考文档：[https://gorm.io/zh_CN/gen/dynamic_sql.html](https://gorm.io/zh_CN/gen/dynamic_sql.html)
 
 1、在entity目录中定义模型的查询接口 

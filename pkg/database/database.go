@@ -7,6 +7,8 @@ import (
 	"gorm.io/plugin/dbresolver"
 )
 
+var DefaultAlias = "default"
+
 type Database struct {
 	DB              *gorm.DB
 	maxIdleConn     int

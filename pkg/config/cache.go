@@ -28,4 +28,5 @@ type Interface interface {
 	GetFloat64(key string) float64
 	GetDuration(key string) time.Duration
 	GetStringSlice(key string) []string
+	GetStringMap(key string) map[string]any
 }

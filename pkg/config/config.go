@@ -102,4 +102,8 @@ func (c *Config) GetStringSlice(key string) []string {
 	return cast.ToStringSlice(c.Get(key))
 }
 
+func (c *Config) GetStringMap(key string) map[string]any {
+	return cast.ToStringMap(c.Get(key))
+}
+
 // ============================= Config Cache ====================================

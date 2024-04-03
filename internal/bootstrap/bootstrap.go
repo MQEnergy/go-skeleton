@@ -6,10 +6,11 @@ import (
 	"log/slog"
 	"time"
 
+	"github.com/gogf/gf/v2/util/gconv"
+
 	logger2 "github.com/MQEnergy/go-skeleton/pkg/logger"
 	"gorm.io/gorm/logger"
 
-	"github.com/MQEnergy/go-skeleton/internal/app/dao"
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/cache/redis"
 	"github.com/MQEnergy/go-skeleton/pkg/config"
@@ -34,7 +35,7 @@ var (
 	BootedService []string
 	err           error
 	serviceMap    = bootServiceMap{
-		MysqlService: initMysql,
+		MysqlService: initMultiMysql,
 		RedisService: initRedis,
 	}
 )
@@ -58,6 +59,8 @@ func BootService(services ...string) {
 			BootedService = append(BootedService, k)
 		}
 	}
+	// load dao
+	LoadDao()
 }
 
 // keys ...
@@ -83,24 +86,70 @@ func InitConfig() error {
 	return err
 }
 
-// initMysql ...
-func initMysql() error {
-	if vars.DB != nil {
+// LoadDao 如果多数据库需要手动配置...
+func LoadDao() {
+	// dao default set
+	// if vars.DB != nil {
+	//	 dao.SetDefault(vars.DB)
+	// }
+
+	// 此处自行配置其他dao配置 ... 执行 go run cmd/cli/main.go genModel -a=demo 会生成daodemo目录
+	// if vars.MDB["demo"] != nil {
+	//	 daodemo.SetDefault(vars.MDB["demo"])
+	// }
+}
+
+// initMultiMysql ...
+func initMultiMysql() error {
+	if vars.MDB != nil {
+		return nil
+	}
+	sources := vars.Config.Get("database.mysql.sources")
+	sourceList, ok := sources.([]interface{})
+	if !ok {
+		return nil
+	}
+	if len(sourceList) == 0 {
 		return nil
 	}
 	if vars.Config.GetBool("database.mysql.enabled") == false {
 		return nil
 	}
+	vars.MDB = make(map[string]*gorm.DB, len(sourceList))
+	for _, m := range sourceList {
+		sm := gconv.Map(m)
+		alias := sm["alias"].(string)
+		d, err := handleMysql(sm)
+		if err != nil {
+			slog.Error("Failed to start mysql connection err: ", err.Error())
+			continue
+		}
+		if alias == database.DefaultAlias {
+			vars.DB = d.DB
+		}
+		vars.MDB[alias] = d.DB
+		slog.Info("Starting mysql connection db:" + alias)
+	}
+	return nil
+}
+
+// handleMysql ...
+func handleMysql(sourceMaps map[string]interface{}) (*database.Database, error) {
+	fileName := sourceMaps["filename"].(string)
+	logLevel := sourceMaps["loglevel"].(int)
+	masterDsn := sourceMaps["master"].(string)
+	prefix := sourceMaps["prefix"].(string)
+	seperation := sourceMaps["seperation"].(bool)
+	slaves := sourceMaps["slave"].([]interface{})
+
 	dbContainer := func(dns string) *mysql.Mysql {
 		return mysql.New(func(opts *mysql2.Config) {
 			opts.DSN = dns
 		})
 	}
-	masterDsn := vars.Config.GetString("database.mysql.master")
-	logLevel := vars.Config.GetInt("database.mysql.loglevel")
 	newLogger := logger.New(
 		log.New(logger2.ApplyWriter(
-			vars.Config.GetString("database.mysql.fileName"),
+			fileName,
 			vars.Config,
 		), "\r\n", log.LstdFlags), // io writer
 		logger.Config{
@@ -115,10 +164,10 @@ func initMysql() error {
 		dbContainer(masterDsn),
 		&gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
-				TablePrefix:   vars.Config.GetString("database.mysql.prefix"),
+				TablePrefix:   prefix,
 				SingularTable: true, // 是否设置单数表名，设置为 是
 			},
-			Logger: newLogger, // Todo
+			Logger: newLogger,
 		},
 		database.WithMaxIdleConn(vars.Config.GetInt("database.mysql.minIdleConn")),
 		database.WithMaxOpenConn(vars.Config.GetInt("database.mysql.maxOpenConn")),
@@ -126,22 +175,19 @@ func initMysql() error {
 		database.WithConnMaxLifetime(vars.Config.GetDuration("database.mysql.maxLifetime")*time.Minute),
 	)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	// write read seperate
-	if vars.Config.GetBool("database.mysql.seperation") {
+	if seperation {
 		var replicas []gorm.Dialector
-		for _, slave := range vars.Config.GetStringSlice("database.mysql.slaves") {
-			replicas = append(replicas, dbContainer(slave).Instance())
+		for _, slave := range slaves {
+			replicas = append(replicas, dbContainer(slave.(string)).Instance())
 		}
 		if err := d.WithSlaveDB([]gorm.Dialector{dbContainer(masterDsn).Instance()}, replicas); err != nil {
-			return err
+			return nil, err
 		}
 	}
-	// dao set db
-	dao.SetDefault(d.DB)
-	vars.DB = d.DB
-	return nil
+	return d, nil
 }
 
 // initRedis ...

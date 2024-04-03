@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/MQEnergy/go-skeleton/internal/app/entity"
@@ -62,7 +63,7 @@ func (c *GormGenCommand) GenModels() {
 		}
 		return columnName
 	})
-	models := make([]interface{}, len(c.tables))
+	models := make([]interface{}, 0)
 	if len(c.tables) > 0 {
 		for _, table := range c.tables {
 			model := c.generator.GenerateModelAs(table, strings.Title(helper.ToCamelCase(table)), jsonTagWithNS)
@@ -71,18 +72,26 @@ func (c *GormGenCommand) GenModels() {
 	} else {
 		models = c.generator.GenerateAllTable(jsonTagWithNS)
 	}
+	tables, err := c.db.Migrator().GetTables()
+	if err != nil {
+		panic(fmt.Errorf("get all tables fail: %w", err))
+	}
 	c.generator.ApplyBasic(models...)
-	c.genModelsInterface()
+	c.genModelsInterface(tables)
 	c.generator.Execute()
 }
 
 // genModelsInterface 生成模型接口
-func (c *GormGenCommand) genModelsInterface() {
+func (c *GormGenCommand) genModelsInterface(tables []string) {
 	if len(c.tableMethods) == 0 {
 		return
 	}
 	for table, methods := range c.tableMethods {
 		if len(methods) == 0 {
+			continue
+		}
+		// 判断是否是当前数据库的（当多库的情况下）
+		if !helper.InAnySlice[string](tables, table) {
 			continue
 		}
 		for _, method := range methods {

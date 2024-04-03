@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/MQEnergy/go-skeleton/internal/middleware"
 	"github.com/MQEnergy/go-skeleton/internal/router/routes"
+	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
 
 	"github.com/goccy/go-json"
@@ -33,7 +34,12 @@ func Register(appName string) *fiber.App {
 	// middleware cors, compress, cache, X-Request-Id
 	r.Use(
 		recover.New(),
-		cors.New(),
+		cors.New(cors.Config{
+			AllowOriginsFunc: func(origin string) bool {
+				return vars.Config.GetString("server.mode") == "dev" || vars.Config.GetString("server.mode") == "test"
+			},
+			AllowCredentials: true,
+		}),
 		compress.New(),
 		requestid.New(),
 	)

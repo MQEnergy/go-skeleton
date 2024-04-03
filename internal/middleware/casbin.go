@@ -22,6 +22,11 @@ var rbacModelConf string
 
 // CasbinMiddleware casbin middleware
 func CasbinMiddleware() fiber.Handler {
+	if vars.DB == nil {
+		return func(c *fiber.Ctx) error {
+			return nil
+		}
+	}
 	adapter, _ := gormadapter.NewAdapterByDB(vars.DB)
 	rc, _ := model.NewModelFromString(rbacModelConf)
 

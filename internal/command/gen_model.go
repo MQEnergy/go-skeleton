@@ -1,7 +1,12 @@
 package command
 
 import (
+	"errors"
 	"strings"
+
+	"github.com/MQEnergy/go-skeleton/pkg/database"
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
+	"github.com/gogf/gf/v2/util/gconv"
 
 	"github.com/MQEnergy/go-skeleton/internal/app/entity"
 	"github.com/MQEnergy/go-skeleton/internal/bootstrap"
@@ -17,8 +22,10 @@ type GenModel struct{}
 
 // Command ...
 func (g *GenModel) Command() *cli.Command {
-	var models string
-
+	var (
+		dbAlias string
+		models  string
+	)
 	return &cli.Command{
 		Name:  "genModel",
 		Usage: "基于gorm的gen的代码生成器，生成数据表model，并生成model对应的dao方法。",
@@ -37,13 +44,20 @@ func (g *GenModel) Command() *cli.Command {
 				Usage:       "请输入数据表名称 输入按照逗号分割 如：user,admin..., 如果不填生成全部模型",
 				Destination: &models,
 			},
+			&cli.StringFlag{
+				Name:        "alias",
+				Aliases:     []string{"a"},
+				Value:       database.DefaultAlias,
+				Usage:       "请输入数据库别名（alias）需要与config.yaml配置中mysql的alias保持一致",
+				Destination: &dbAlias,
+			},
 		},
 		Before: func(ctx *cli.Context) error {
 			bootstrap.BootService(bootstrap.MysqlService)
 			return nil
 		},
 		Action: func(ctx *cli.Context) error {
-			return handleGenModel(models)
+			return handleGenModel(dbAlias, models)
 		},
 	}
 }
@@ -51,14 +65,38 @@ func (g *GenModel) Command() *cli.Command {
 var _ command.Interface = (*GenModel)(nil)
 
 // handleGenModel ...
-func handleGenModel(models string) error {
+func handleGenModel(alias, models string) error {
 	modelNames := make([]string, 0)
 	if models != "" {
 		modelNames = strings.Split(models, ",")
 	}
-
-	newGenCommand, err := command.NewGenCommand(vars.DB, gen.Config{
-		OutPath:           "./internal/app/dao",
+	var db *gorm.DB
+	daoName := "dao"
+	if alias == database.DefaultAlias {
+		db = vars.DB
+	} else {
+		sources := vars.Config.Get("database.mysql.sources")
+		sourceList, ok := sources.([]interface{})
+		if !ok {
+			return errors.New("数据库配置信息不存在")
+		}
+		if len(sourceList) == 0 {
+			return errors.New("数据库配置信息不存在")
+		}
+		aliasList := make([]string, 0)
+		for _, m := range sourceList {
+			sm := gconv.Map(m)
+			aliasItem := sm["alias"].(string)
+			aliasList = append(aliasList, aliasItem)
+		}
+		if !helper.InAnySlice[string](aliasList, alias) {
+			return errors.New("当前别名未配置数据库信息")
+		}
+		db = vars.MDB[alias]
+		daoName += alias
+	}
+	newGenCommand, err := command.NewGenCommand(db, gen.Config{
+		OutPath:           "./internal/app/" + daoName,
 		OutFile:           "",
 		WithUnitTest:      false,
 		Mode:              gen.WithDefaultQuery | gen.WithQueryInterface | gen.WithoutContext,
