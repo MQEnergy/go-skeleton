@@ -50,5 +50,9 @@ func InitCommonGroup(r fiber.Router, handles ...fiber.Handler) {
 
 		// 上传资源
 		router.Post("/attachment/upload", backend.Attachment.Upload)
+
+		// 登录
+		router.Post("/backend/auth/login", backend.User.Login)
+
 	}
 }

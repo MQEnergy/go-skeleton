@@ -4,7 +4,6 @@ import (
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
 	"github.com/spf13/cast"
-	"strings"
 
 	jwtware "github.com/gofiber/contrib/jwt"
 	"github.com/gofiber/fiber/v2"
@@ -32,9 +31,10 @@ func AuthMiddleware() fiber.Handler {
 			return response.UnauthorizedException(ctx, "token is invalid")
 		},
 		Filter: func(ctx *fiber.Ctx) bool {
-			if strings.HasPrefix(ctx.Path(), "/backend/auth/login") {
-				return true
-			}
+			// notice: 在此可自定义路由通过auth验证
+			//if strings.HasPrefix(ctx.Path(), "/backend/auth/login") {
+			//	return true
+			//}
 			return false
 		},
 		// ContextKey: "user", // used in ctx.Locals("user").(*jwt.Token)

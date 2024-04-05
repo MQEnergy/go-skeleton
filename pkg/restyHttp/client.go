@@ -7,8 +7,10 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-var once sync.Once
-var client *resty.Client
+var (
+	once   sync.Once
+	client *resty.Client
+)
 
 // GetHttpClient
 // @Description: 实例化
