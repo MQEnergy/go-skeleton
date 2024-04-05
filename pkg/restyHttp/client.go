@@ -8,13 +8,13 @@ import (
 )
 
 var once sync.Once
+var client *resty.Client
 
 // GetHttpClient
 // @Description: 实例化
 // @param proxys
 // @return *resty.Client
 func GetHttpClient(proxys ...string) *resty.Client {
-	var client *resty.Client
 	once.Do(func() {
 		client = resty.New()
 		if len(proxys) > 0 {
