@@ -102,12 +102,9 @@ func RandString(length int) string {
 
 // GeneratePasswordHash 生成密码hash值
 func GeneratePasswordHash(password string, salt string) string {
-	md5 := md5.New()
-	io.WriteString(md5, password)
-	str := fmt.Sprintf("%x", md5.Sum(nil))
 	s := sha256.New()
 	io.WriteString(s, password+salt)
-	str = fmt.Sprintf("%x", s.Sum(nil))
+	str := fmt.Sprintf("%x", s.Sum(nil))
 	return str
 }
 

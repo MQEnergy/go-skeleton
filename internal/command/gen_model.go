@@ -4,15 +4,12 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/MQEnergy/go-skeleton/pkg/database"
-	"github.com/MQEnergy/go-skeleton/pkg/helper"
-	"github.com/gogf/gf/v2/util/gconv"
-
 	"github.com/MQEnergy/go-skeleton/internal/app/entity"
 	"github.com/MQEnergy/go-skeleton/internal/bootstrap"
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/command"
 	"github.com/MQEnergy/go-skeleton/pkg/config"
+	"github.com/MQEnergy/go-skeleton/pkg/database"
 	"github.com/urfave/cli/v2"
 	"gorm.io/gen"
 	"gorm.io/gorm"
@@ -75,24 +72,11 @@ func handleGenModel(alias, models string) error {
 	if alias == database.DefaultAlias {
 		db = vars.DB
 	} else {
-		sources := vars.Config.Get("database.mysql.sources")
-		sourceList, ok := sources.([]interface{})
+		_db, ok := vars.MDB[alias]
 		if !ok {
 			return errors.New("数据库配置信息不存在")
 		}
-		if len(sourceList) == 0 {
-			return errors.New("数据库配置信息不存在")
-		}
-		aliasList := make([]string, 0)
-		for _, m := range sourceList {
-			sm := gconv.Map(m)
-			aliasItem := sm["alias"].(string)
-			aliasList = append(aliasList, aliasItem)
-		}
-		if !helper.InAnySlice[string](aliasList, alias) {
-			return errors.New("当前别名未配置数据库信息")
-		}
-		db = vars.MDB[alias]
+		db = _db
 		daoName += alias
 	}
 	newGenCommand, err := command.NewGenCommand(db, gen.Config{

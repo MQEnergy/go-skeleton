@@ -4,6 +4,8 @@ import (
 	_ "embed"
 	"strings"
 
+	"gorm.io/gorm"
+
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/helper"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
@@ -19,16 +21,18 @@ import (
 var rbacModelConf string
 
 // CasbinMiddleware casbin middleware
-func CasbinMiddleware() fiber.Handler {
+func CasbinMiddleware(db *gorm.DB, prefix, tableName string) fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		if vars.DB == nil {
+		if db == nil {
 			return ctx.Next()
 		}
-		adapter, _ := gormadapter.NewAdapterByDB(vars.DB)
+		if tableName == "" {
+			tableName = "casbin_rule"
+		}
+		adapter, _ := gormadapter.NewFilteredAdapterByDB(db, prefix, tableName)
 		rc, _ := model.NewModelFromString(rbacModelConf)
-
 		e, _ := casbin.NewEnforcer(rc, adapter)
-		e.AddFunction("ParamsMatch", ParamsMatchFunc)
+		e.AddFunction("ParamsObjMatch", ParamsObjMatchFunc)
 		e.AddFunction("ParamsActMatch", ParamsActMatchFunc)
 		_ = e.LoadPolicy()
 
@@ -69,8 +73,8 @@ func ParamsActMatchFunc(args ...interface{}) (interface{}, error) {
 	return pActArr[0] == rAct, nil
 }
 
-// ParamsMatchFunc 自定义规则函数 path
-func ParamsMatchFunc(args ...interface{}) (interface{}, error) {
+// ParamsObjMatchFunc 自定义规则函数 path
+func ParamsObjMatchFunc(args ...interface{}) (interface{}, error) {
 	rObj := args[0].(string)
 	pObj := args[1].(string)
 	rObj1 := strings.Split(rObj, "?")[0]

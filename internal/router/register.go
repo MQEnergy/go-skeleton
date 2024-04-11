@@ -5,7 +5,6 @@ import (
 	"github.com/MQEnergy/go-skeleton/internal/router/routes"
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
-
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -48,15 +47,14 @@ func Register(appName string) *fiber.App {
 
 	// backend
 	routes.InitBackendGroup(r,
-		middleware.AuthMiddleware(),   // jwt token middleware
-		middleware.CacheMiddleware(),  // http cache middleware
-		middleware.CasbinMiddleware(), // casbin middleware
+		middleware.AuthMiddleware(),  // jwt token middleware
+		middleware.CacheMiddleware(), // http cache middleware 按需使用
 	)
 
 	// frontend
 	routes.InitFrontendGroup(r,
 		middleware.AuthMiddleware(),
-		middleware.CacheMiddleware(),
+		middleware.CacheMiddleware(), // http cache middleware 按需使用
 	)
 	return r
 }

@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"sync"
 	"time"
+
+	"github.com/MQEnergy/go-skeleton/internal/app/dao"
 
 	"github.com/gogf/gf/v2/util/gconv"
 
@@ -38,6 +41,7 @@ var (
 		MysqlService: initMultiMysql,
 		RedisService: initRedis,
 	}
+	once sync.Once
 )
 
 // BootService Load service
@@ -89,15 +93,16 @@ func InitConfig() error {
 
 // LoadDao 如果多数据库需要手动配置...
 func LoadDao() {
-	// dao default set
-	// if vars.DB != nil {
-	//	 dao.SetDefault(vars.DB)
-	// }
-
-	// 此处自行配置其他dao配置 ... 执行 go run cmd/cli/main.go genModel -a=demo 会生成daodemo目录
-	// if vars.MDB["demo"] != nil {
-	//	 daodemo.SetDefault(vars.MDB["demo"])
-	// }
+	once.Do(func() {
+		// dao default set
+		if vars.DB != nil {
+			dao.SetDefault(vars.DB)
+		}
+		// 此处自行配置其他dao配置 ... 执行 go run cmd/cli/main.go genModel -a=demo 会生成daodemo目录
+		// if vars.MDB["demo"] != nil {
+		//	 daodemo.SetDefault(vars.MDB["demo"])
+		// }
+	})
 }
 
 // initMultiMysql ...
@@ -105,21 +110,20 @@ func initMultiMysql() error {
 	if vars.MDB != nil {
 		return nil
 	}
+	if vars.Config.GetBool("database.mysql.enabled") == false {
+		return nil
+	}
 	sources := vars.Config.Get("database.mysql.sources")
-	sourceList, ok := sources.([]interface{})
+	sourceList, ok := sources.(map[string]interface{})
 	if !ok {
 		return nil
 	}
 	if len(sourceList) == 0 {
 		return nil
 	}
-	if vars.Config.GetBool("database.mysql.enabled") == false {
-		return nil
-	}
 	vars.MDB = make(map[string]*gorm.DB, len(sourceList))
-	for _, m := range sourceList {
+	for alias, m := range sourceList {
 		sm := gconv.Map(m)
-		alias := sm["alias"].(string)
 		d, err := handleMysql(sm)
 		if err != nil {
 			slog.Error("Failed to start mysql connection err: ", err.Error())
