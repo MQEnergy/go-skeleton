@@ -3,7 +3,7 @@
 
 # 持续更新中...
 
-基于go-skeleton + Vue3 + arco.design 开发的插件化后台管理系统 敬请期待~
+基于go-skeleton + Vuejs + shadcn-vue 开发的面向出海的插件化后台管理系统 敬请期待~
 
 项目地址：[https://github.com/MQEnergy/mqshop](https://github.com/MQEnergy/mqshop)
 
