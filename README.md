@@ -115,7 +115,8 @@ make darwin
 var (
 	BasePath string         // 根目录
 	DB       *gorm.DB       // Mysql数据库
-	Redis    *redis.Client  // redis连接池
+    MDB      map[string]*gorm.DB // mysql多数据库操作
+    Redis    *redis.Client  // redis连接池
 	Router   *fiber.Router  // 路由
 	Config   *config.Config // 配置
 )
