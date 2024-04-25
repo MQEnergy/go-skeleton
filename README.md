@@ -113,12 +113,12 @@ make darwin
 在internal/vars目录中可查看全局可用的参数
 ```go
 var (
-	BasePath string         // 根目录
-	DB       *gorm.DB       // Mysql数据库
+    BasePath string              // 根目录
+    DB       *gorm.DB            // Mysql数据库
     MDB      map[string]*gorm.DB // mysql多数据库操作
-    Redis    *redis.Client  // redis连接池
-	Router   *fiber.Router  // 路由
-	Config   *config.Config // 配置
+    Redis    *redis.Client       // redis连接池
+    Router   *fiber.Router       // 路由
+    Config   *config.Config      // 配置
 )
 ```
 
