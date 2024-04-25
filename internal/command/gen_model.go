@@ -1,8 +1,14 @@
 package command
 
 import (
+	_ "embed"
 	"errors"
+	"fmt"
+	"os"
 	"strings"
+	"text/template"
+
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
 
 	"github.com/MQEnergy/go-skeleton/internal/app/entity"
 	"github.com/MQEnergy/go-skeleton/internal/bootstrap"
@@ -14,6 +20,9 @@ import (
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )
+
+//go:embed tpls/gen_dao.tpl
+var genDaoTpl string
 
 type GenModel struct{}
 
@@ -108,5 +117,48 @@ func handleGenModel(alias, models string) error {
 		return err
 	}
 	newGenCommand.GenModels()
+
+	// 自动生成dao的引用
+	if err := genDao(); err != nil {
+		return errors.New("自动加载dao失败 err: " + err.Error())
+	}
+	return nil
+}
+
+// genDao ...
+func genDao() error {
+	fileName := "dao.go"
+	rootPath := vars.BasePath + "/internal/bootstrap/boots/"
+	moduleName := helper.GetProjectModuleName()
+	dbs := make([]map[string]string, 0)
+	for alias := range vars.MDB {
+		if alias == database.DefaultAlias {
+			dbs = append(dbs, map[string]string{
+				"dao":           "dao",
+				"alias":         alias,
+				"importPackage": moduleName,
+			})
+		} else {
+			dbs = append(dbs, map[string]string{
+				"dao":           "dao" + alias,
+				"alias":         alias,
+				"importPackage": moduleName,
+			})
+		}
+	}
+	// 渲染模板
+	file, err := os.Create(rootPath + fileName)
+	if err != nil {
+		return err
+	}
+	t1 := template.Must(template.New("gendaotpl").Parse(genDaoTpl))
+	if err := t1.Execute(file, map[string]interface{}{
+		"ImportPackage": moduleName,
+		"Dbs":           dbs,
+	}); err != nil {
+		return err
+	}
+
+	fmt.Println(fmt.Sprintf("\u001B[34m%s\u001B[0m", fileName+" created successfully"))
 	return nil
 }

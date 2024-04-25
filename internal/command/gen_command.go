@@ -29,8 +29,9 @@ type GenCommand struct{}
 
 func (g *GenCommand) Command() *cli.Command {
 	var (
-		name string
-		dir  string
+		name    string
+		dir     string
+		service string
 	)
 	return &cli.Command{
 		Name:  "genCommand",
@@ -52,9 +53,17 @@ func (g *GenCommand) Command() *cli.Command {
 				Destination: &dir,
 				Required:    false,
 			},
+			&cli.StringFlag{
+				Name:        "service",
+				Aliases:     []string{"s"},
+				Value:       "",
+				Usage:       "加载其他自定义服务(已经开启的服务) 如：mysql、redis ... 格式：以英文逗号相隔 如：mysql,redis",
+				Destination: &service,
+				Required:    false,
+			},
 		},
 		Action: func(c *cli.Context) error {
-			return genCommand(name, dir)
+			return genCommand(name, dir, service)
 		},
 	}
 }
@@ -62,9 +71,19 @@ func (g *GenCommand) Command() *cli.Command {
 var _ command.Interface = (*GenCommand)(nil)
 
 // genCommand ...
-func genCommand(name, dir string) error {
+func genCommand(name, dir, service string) error {
 	cmdName := strings.ToLower(name)
 	cmdDir := strings.ToLower(dir)
+	services := strings.Split(service, ",")
+	serviceList := make([]string, 0)
+	if len(services) > 0 {
+		for _, s := range services {
+			if strings.TrimSpace(s) != "" {
+				serviceName := strings.Title(helper.ToCamelCase(strings.TrimSpace(s))) + "Service"
+				serviceList = append(serviceList, serviceName)
+			}
+		}
+	}
 	moduleName := helper.GetProjectModuleName()
 	fileName := fmt.Sprintf("%s.go", cmdName)
 	rootPath := vars.BasePath + commandPath
@@ -98,6 +117,7 @@ func genCommand(name, dir string) error {
 		"ImportPackage": moduleName,
 		"Name":          helper.ToCamelCase(cmdName),
 		"Usage":         caseCmdName + "命令工具",
+		"Services":      serviceList,
 	}); err != nil {
 		return err
 	}
@@ -148,7 +168,7 @@ func handleComamnd(moduleName string) error {
 		commandNames = append(commandNames, filesList...)
 	}
 
-	cmdFile, err := os.OpenFile(cmdFileName, os.O_CREATE|os.O_WRONLY, 0o666)
+	cmdFile, err := os.Create(cmdFileName)
 	if err != nil {
 		return err
 	}

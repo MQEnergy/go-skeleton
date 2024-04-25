@@ -1,0 +1,6 @@
+package boots
+
+// InitDao ...
+func InitDao() {
+	// Todo implement ...
+}

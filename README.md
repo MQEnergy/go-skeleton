@@ -134,24 +134,10 @@ go run cmd/cli/main.go genModel [-m=foo] [-e=prod] [-a=demo]
 ```
 
 命令使用-a参数 会生成新的dao目录，
-使用需要在[bootstrap/bootstrap.go](internal/bootstrap/bootstrap.go)中 LoadDao函数中配置使用
-```go
-// LoadDao 如果多数据库需要手动配置...
-func LoadDao() {
-    // dao default set
-    // if vars.DB != nil {
-    //	 dao.SetDefault(vars.DB)
-    // }
-    
-    // 此处自行配置其他dao配置 ... 执行 go run cmd/cli/main.go genModel -a=demo 会生成daodemo目录
-    // if vars.MDB["demo"] != nil {
-    //	 daodemo.SetDefault(vars.MDB["demo"])
-    // }
-}
-```
+
 参考文档：[https://gorm.io/zh_CN/gen/dynamic_sql.html](https://gorm.io/zh_CN/gen/dynamic_sql.html)
 
-1、在entity目录中定义模型的查询接口 
+1、在entity目录中定义模型的查询接口（按需使用）
 
 参考：[internal/app/entity/admin/admin.go](./internal/app/entity/admin/admin.go)
 
@@ -188,8 +174,11 @@ var methodMaps = MethodMaps{
 # 查看帮助
 go run cmd/cli/main.go genCommand -h
 
-# 命令示例 -n: 命令行名称 -d: 命令存放目录 支持无限极子目录 如：foo/foo
-go run cmd/cli/main.go genCommand -n=foo [-d=foo]
+# 命令示例 
+# -n: 命令行名称 
+# -d: 命令存放目录 支持无限极子目录 如：foo/foo 
+# -s: 加载已经存在的服务 如：mysql,redis 格式：多个服务以英文逗号相隔 如：mysql,redis
+go run cmd/cli/main.go genCommand -n=foo [-d=foo] [-s=mysql,redis]
 ```
 
 ### 4、创建controller

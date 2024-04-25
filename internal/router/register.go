@@ -1,9 +1,12 @@
 package router
 
 import (
+	"strings"
+
 	"github.com/MQEnergy/go-skeleton/internal/middleware"
 	"github.com/MQEnergy/go-skeleton/internal/router/routes"
 	"github.com/MQEnergy/go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/pkg/helper"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
@@ -35,7 +38,15 @@ func Register(appName string) *fiber.App {
 		recover.New(),
 		cors.New(cors.Config{
 			AllowOriginsFunc: func(origin string) bool {
-				return vars.Config.GetString("server.mode") == "dev" || vars.Config.GetString("server.mode") == "test"
+				originList := vars.Config.GetString("server.originList")
+				if originList == "*" {
+					return true
+				}
+				originSlice := strings.Split(originList, ",")
+				if helper.InAnySlice[string](originSlice, origin) {
+					return true
+				}
+				return false
 			},
 			AllowCredentials: true,
 		}),
@@ -48,7 +59,7 @@ func Register(appName string) *fiber.App {
 	// backend
 	routes.InitBackendGroup(r,
 		middleware.AuthMiddleware(),  // jwt token middleware
-		middleware.CacheMiddleware(), // http cache middleware 按需使用
+		middleware.CacheMiddleware(), // http cache middleware 此配置会缓存http请求，让相同参数请求接口的第二次请求走http缓存 接口速度更快 根据业务使用
 	)
 
 	// frontend

@@ -3,7 +3,11 @@ package {{.PkgName}}
 import (
     "fmt"
 
-	"{{.ImportPackage}}/internal/bootstrap"
+    {{- if eq (len .Services) 0}}
+	"{{.ImportPackage}}/internal/bootstrap/boots"
+	{{- else}}
+    "{{.ImportPackage}}/internal/bootstrap"
+	{{- end}}
     "{{.ImportPackage}}/pkg/command"
     "{{.ImportPackage}}/pkg/config"
 
@@ -27,7 +31,16 @@ func (g *{{.CmdName}}) Command() *cli.Command {
             },
 		},
         Before: func(ctx *cli.Context) error {
-            return bootstrap.InitConfig()
+            {{- if eq (len .Services) 0}}
+            return boots.InitConfig()
+            {{- else}}
+            bootstrap.BootService(
+            {{- range $item := .Services}}
+                bootstrap.{{$item}},
+            {{- end}}
+            )
+            return nil
+            {{- end}}
         },
 		Action: func(ctx *cli.Context) error {
 			return handle{{.CmdName}}()

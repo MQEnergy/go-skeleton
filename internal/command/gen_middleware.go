@@ -6,10 +6,11 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/MQEnergy/go-skeleton/internal/bootstrap/boots"
+
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/helper"
 
-	"github.com/MQEnergy/go-skeleton/internal/bootstrap"
 	"github.com/MQEnergy/go-skeleton/pkg/command"
 	"github.com/urfave/cli/v2"
 )
@@ -38,7 +39,7 @@ func (g *GenMiddleware) Command() *cli.Command {
 			},
 		},
 		Before: func(ctx *cli.Context) error {
-			return bootstrap.InitConfig()
+			return boots.InitConfig()
 		},
 		Action: func(ctx *cli.Context) error {
 			return handleGenMiddleware(name)

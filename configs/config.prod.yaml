@@ -5,6 +5,7 @@ server:
   fileUploadPath: 'upload' # 文件上传路径
   fileHostUrl: 'http://127.0.0.1:9527/' # 文件访问域名
   whiteList: '*' # 白名单
+  originList: '*' # cors地址列表以逗号相隔 默认* 按需配置如：https://example1.com,https://example2.com,
 jwt:
   expire: 864000   # token过期时间 单位：s
   issuer: 'go-skeleton'
@@ -26,7 +27,7 @@ database:
     maxLifeTime: 60 # 设置连接可复用的最大时间（分钟）
     maxIdleTime: 0 # 设置连接池中保持空闲的最长时间（秒）默认是0 意味着连接池中的连接将保持打开状态
     sources: # 数据库配置 需要配置多个数据库 复制default以下模板
-      default: # 默认数据库
+      default: # 默认数据库 (此名称切勿修改)
         seperation: false # 配置是否使用读写分离，方便改配置切换
         fileName: 'default-sql' # 日志文件名称 【需修改】
         logLevel: 1 # 日志模式 1:slient 2:error 3:warn 4:info
