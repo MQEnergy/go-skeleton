@@ -15,13 +15,14 @@
 ## 一、项目结构
 ```
 ├── LICENSE
-├── Makefile
+├── Makefile          # 构建
 ├── README.md
+├── benchmark         # benchmark
 ├── cmd
-│   ├── app   # 接口运行命令
-│   └── cli   # 命令行运行命令
-├── configs         # 配置文件
-├── database        # 数据表文件
+│   ├── app           # 接口运行命令
+│   └── cli           # 命令行运行命令
+├── configs           # 配置文件
+├── database          # 数据表文件
 ├── go.mod
 ├── go.sum
 ├── internal
@@ -41,7 +42,11 @@
     ├── helper        # 帮助函数
     ├── jwtauth       # jwt类
     ├── logger        # 日志类
-    └── response      # 接口返回类
+    ├── oss           # aliyun oss上传
+    ├── response      # 接口返回类
+    ├── restyHttp     # 网络请求类
+    ├── upload        # 上传类
+    └── wecom         # 企业微信
 
 ```
 #### 目前已集成和实现：
@@ -162,7 +167,7 @@ type Querier interface {
 
 ```go
 var methodMaps = MethodMaps{
-    "yfo_admin": { // 表名称
+    "cn_admin": { // 表名称
         func(Querier) {}, // 扩展的查询接口 可多个
         func(admin.Querier) {},
     },

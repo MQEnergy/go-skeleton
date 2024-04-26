@@ -2,7 +2,6 @@ package backend
 
 import (
 	"github.com/MQEnergy/go-skeleton/internal/app/service"
-
 	"github.com/MQEnergy/go-skeleton/internal/request/user"
 	"github.com/gofiber/fiber/v2"
 )
@@ -23,9 +22,9 @@ var Auth = &AuthService{}
 func (s *AuthService) Login(reqParams *user.LoginReq) (fiber.Map, error) {
 	//var (
 	//	isSuper   = 0 // 是否超级管理员 1：是 0：不是
-	//	u         = dao.YfoAdmin
+	//	u         = dao.Admin
 	//	err       error
-	//	adminInfo *model.YfoAdmin
+	//	adminInfo *model.Admin
 	//)
 	//adminInfo, err = u.GetByAccount(reqParams.Account)
 	//if err != nil {
