@@ -73,6 +73,7 @@
 - [ ] 支持 [grpc](https://github.com/grpc/grpc-go) rpc组件
 - [ ] 支持 [go-rabbitmq](https://github.com/MQEnergy/go-rabbitmq) 消息队列组件 基于rabbitmq官方 [amqp](https://github.com/streadway/amqp) 组件封装实现的消费者和生产者
 - [ ] 实现 ticker 定时器组件
+- [ ] 实现 mongodb 数据库连接
 
 ## 二、运行项目
 ```shell
