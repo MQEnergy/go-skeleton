@@ -32,14 +32,17 @@ func New(fileName string, c *config.Config) *slog.Logger {
 
 // ApplyWriter ...
 func ApplyWriter(fileName string, c *config.Config) io.Writer {
+	fileName = fmt.Sprintf("%s/%s.log", c.Get("log.dirPath"), fileName)
 	r := &lumberjack.Logger{
-		Filename:   fmt.Sprintf("%s/%s.log", c.Get("log.dirPath"), fileName), // file name
-		MaxSize:    c.GetInt("log.maxSize"),                                  // Maximum file size default 1M
-		MaxAge:     c.GetInt("log.maxAge"),                                   // Maximum retention time 1天
-		MaxBackups: c.GetInt("log.maxBackups"),                               // Maximum number of reserved files 3个
-		LocalTime:  c.GetBool("log.localTime"),                               // Whether to use local time
-		Compress:   c.GetBool("log.compress"),                                // Whether to compress archive logs
+		Filename:   fileName,                   // file name
+		MaxSize:    c.GetInt("log.maxSize"),    // Maximum file size default 1M
+		MaxAge:     c.GetInt("log.maxAge"),     // Maximum retention time 1天
+		MaxBackups: c.GetInt("log.maxBackups"), // Maximum number of reserved files 3个
+		LocalTime:  c.GetBool("log.localTime"), // Whether to use local time
+		Compress:   c.GetBool("log.compress"),  // Whether to compress archive logs
 	}
+	// change file perms 0600 to 0644
+	os.Chmod(fileName, 0644)
 	dlvl.Set(slog.Level(c.GetInt("log.level")))
 	writer := io.MultiWriter(os.Stdout, r)
 	if c.GetString("server.mode") == "production" {
