@@ -24,6 +24,7 @@ func Register(appName string) *fiber.App {
 	}
 
 	r := fiber.New(fiber.Config{
+		Prefork: vars.Config.GetBool("server.prefork"),
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return response.NotFoundException(c, err.Error())
 		},
