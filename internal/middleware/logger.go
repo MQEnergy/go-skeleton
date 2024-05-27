@@ -22,5 +22,15 @@ func LoggerMiddleware() fiber.Handler {
 		WithUserAgent:    true,
 		WithRequestBody:  true,
 		WithRequestID:    true,
+		Filters: []slogfiber.Filter{
+			func(c *fiber.Ctx) bool {
+				if file, err := c.FormFile("file"); err == nil {
+					if file != nil {
+						return false
+					}
+				}
+				return true
+			},
+		},
 	})
 }
