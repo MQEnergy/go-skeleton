@@ -26,7 +26,7 @@ func (c *AttachmentController) Upload(ctx *fiber.Ctx) error {
 		return response.BadRequestException(ctx, err.Error())
 	}
 	reqParams.FileName = fileName
-	fileHeader, err := upload.New(0, []string{}).UploadToLocal(vars.Config, reqParams.FileName, reqParams.FilePath)
+	fileHeader, err := upload.New(0, []string{}).UploadToLocal(&vars.Config, reqParams.FileName, reqParams.FilePath)
 	if err != nil {
 		return response.BadRequestException(ctx, err.Error())
 	}

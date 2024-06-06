@@ -94,24 +94,36 @@ func WithCache(cache kernel.CacheInterface) OptionFunc {
 
 // GetQrConnectURL 扫码授权登录
 func (c *Config) GetQrConnectURL() (string, error) {
+	if c.work == nil {
+		return "", fmt.Errorf("work is nil")
+	}
 	c.work.OAuth.Provider.WithRedirectURL(c.callbackUrl)
 	return c.work.OAuth.Provider.GetQrConnectURL()
 }
 
 // GetAuthURL 网页授权登录
 func (c *Config) GetAuthURL() (string, error) {
+	if c.work == nil {
+		return "", fmt.Errorf("work is nil")
+	}
 	c.work.OAuth.Provider.WithRedirectURL(c.callbackUrl)
 	return c.work.OAuth.Provider.GetAuthURL()
 }
 
 // GetOAuthUrl 获取授权url地址
 func (c *Config) GetOAuthUrl() string {
+	if c.work == nil {
+		return ""
+	}
 	c.work.OAuth.Provider.WithRedirectURL(c.callbackUrl)
 	return c.work.OAuth.Provider.GetOAuthURL()
 }
 
-// GetUserInfo 获取用户信息
+// GetUserDetail 获取用户信息
 func (c *Config) GetUserDetail(code string) (*weCom.ResponseGetUserDetail, error) {
+	if c.work == nil {
+		return nil, fmt.Errorf("work is nil")
+	}
 	userInfo, err := c.work.OAuth.Provider.GetUserInfo(code)
 	if err != nil {
 		return nil, err

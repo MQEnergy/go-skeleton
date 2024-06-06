@@ -96,7 +96,9 @@ func genCommand(name, dir, service string) error {
 			return err
 		}
 		cmdDirs := strings.Split(cmdDir, "/")
-		commandName = cmdDirs[len(cmdDirs)-1]
+		if len(cmdDirs) > 0 {
+			commandName = cmdDirs[len(cmdDirs)-1]
+		}
 	}
 	// 判断文件是否存在
 	if flag := helper.IsPathExist(rootPath + fileName); flag {
@@ -151,7 +153,10 @@ func handleComamnd(moduleName string) error {
 		}
 		if path != "" {
 			pathArr := strings.Split(path, "/")
-			aliasName := pathArr[len(pathArr)-1] + helper.RandString(6)
+			aliasName := helper.RandString(6)
+			if len(pathArr) > 0 {
+				aliasName = pathArr[len(pathArr)-1] + aliasName
+			}
 			path = fmt.Sprintf("%s \"%s\"", aliasName, moduleName+commandPath+path)
 			for _, s := range files {
 				filesList = append(filesList, fmt.Sprintf("&%s.%s{}", aliasName, strings.Title(helper.ToCamelCase(s))))

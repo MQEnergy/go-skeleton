@@ -14,7 +14,7 @@ import (
 func InitCommonGroup(r fiber.Router, handles ...fiber.Handler) {
 	router := r.Group("/", handles...)
 	{
-		j := jwtauth.New(vars.Config)
+		j := jwtauth.New(&vars.Config)
 
 		router.Get("/", func(c *fiber.Ctx) error {
 			return response.SuccessJSON(c, "", "")

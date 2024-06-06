@@ -14,7 +14,7 @@ import (
 func LoggerMiddleware() fiber.Handler {
 	return slogfiber.NewWithConfig(logger.New(
 		vars.Config.GetString("log.fileName"),
-		vars.Config,
+		&vars.Config,
 	), slogfiber.Config{
 		DefaultLevel:     slog.LevelInfo,
 		ClientErrorLevel: slog.LevelWarn,

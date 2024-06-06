@@ -66,7 +66,7 @@ func handleMysql(sourceMaps map[string]interface{}) (*database.Database, error) 
 	newLogger := logger.New(
 		log.New(logger2.ApplyWriter(
 			fileName,
-			vars.Config,
+			&vars.Config,
 		), "\r\n", log.LstdFlags), // io writer
 		logger.Config{
 			SlowThreshold:             time.Second,               // Slow SQL threshold

@@ -312,8 +312,15 @@ go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 # run path为shadow所在目录
 go vet -vettool={path}/shadow ./cmd/app/main.go 
 ```
+### 七、静态分析
+```shell
+# install
+go install go.uber.org/nilaway/cmd/nilaway@latest
 
-### 七、注意
+# run 根目录
+nilaway ./...
+```
+### 八、注意
 #### 1、air配置文件 .air.toml在不同环境下需要修改
 注意查看[.air.toml](.air.toml)文件
 

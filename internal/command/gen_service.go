@@ -78,7 +78,9 @@ func handleGenService(name, dir string) error {
 			return err
 		}
 		cmdDirs := strings.Split(cmdDir, "/")
-		servicePkgName = cmdDirs[len(cmdDirs)-1]
+		if len(cmdDirs) > 0 {
+			servicePkgName = cmdDirs[len(cmdDirs)-1]
+		}
 	}
 	// 判断文件是否存在
 	if flag := helper.IsPathExist(rootPath + fileName); flag {

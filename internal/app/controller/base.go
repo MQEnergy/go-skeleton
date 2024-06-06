@@ -36,14 +36,14 @@ func (c *Controller) View(ctx *fiber.Ctx) error {
 	return response.SuccessJSON(ctx, "view", "")
 }
 
-var validate *validator.XValidator
+var validate validator.XValidator
 
 func init() {
-	var err error
-	validate, err = validator.New("zh")
+	valid, err := validator.New("zh")
 	if err != nil {
 		panic(err)
 	}
+	validate = *valid
 }
 
 // Validate ...

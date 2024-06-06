@@ -38,9 +38,13 @@ func New(local string) (*XValidator, error) {
 	}
 	switch local {
 	case "zh":
-		cnTrans.RegisterDefaultTranslations(validate, translator) // 注册默认的英文翻译器
+		if err := cnTrans.RegisterDefaultTranslations(validate, translator); err != nil {
+			return nil, err
+		}
 	default:
-		enTrans.RegisterDefaultTranslations(validate, translator)
+		if err := enTrans.RegisterDefaultTranslations(validate, translator); err != nil {
+			return nil, err
+		}
 	}
 
 	return &XValidator{

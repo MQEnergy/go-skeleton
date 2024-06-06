@@ -2,6 +2,8 @@ package middleware
 
 import (
 	_ "embed"
+	"fmt"
+	"github.com/spf13/cast"
 	"strings"
 
 	"gorm.io/gorm"
@@ -62,19 +64,31 @@ func CasbinMiddleware(db *gorm.DB, prefix, tableName string) fiber.Handler {
 
 // ParamsActMatchFunc 自定义规则函数 method
 func ParamsActMatchFunc(args ...interface{}) (interface{}, error) {
-	rAct := args[0].(string)
-	pAct := args[1].(string)
+	if len(args) != 2 {
+		return nil, fmt.Errorf("must be 2 arguments")
+	}
+	rAct := cast.ToString(args[0])
+	pAct := cast.ToString(args[1])
 	pActArr := strings.Split(pAct, ",")
+	if len(pActArr) == 1 {
+		return pActArr[0] == rAct, nil
+	}
 	if len(pActArr) > 1 {
 		return helper.InAnySlice[string](pActArr, rAct), nil
 	}
-	return pActArr[0] == rAct, nil
+	return false, nil
 }
 
 // ParamsObjMatchFunc 自定义规则函数 path
 func ParamsObjMatchFunc(args ...interface{}) (interface{}, error) {
-	rObj := args[0].(string)
-	pObj := args[1].(string)
-	rObj1 := strings.Split(rObj, "?")[0]
-	return util.KeyMatch2(rObj1, pObj), nil
+	if len(args) != 2 {
+		return nil, fmt.Errorf("must be 2 arguments")
+	}
+	rObj := cast.ToString(args[0])
+	pObj := cast.ToString(args[1])
+	rObjArr := strings.Split(rObj, "?")
+	if len(rObjArr) == 0 {
+		return false, nil
+	}
+	return util.KeyMatch2(rObjArr[0], pObj), nil
 }

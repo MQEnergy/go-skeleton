@@ -78,7 +78,9 @@ func handleGenController(name, dir string) error {
 			return err
 		}
 		cmdDirs := strings.Split(cmdDir, "/")
-		ctlPkgName = cmdDirs[len(cmdDirs)-1]
+		if len(cmdDirs) > 0 {
+			ctlPkgName = cmdDirs[len(cmdDirs)-1]
+		}
 	}
 	// 判断文件是否存在
 	if flag := helper.IsPathExist(rootPath + fileName); flag {

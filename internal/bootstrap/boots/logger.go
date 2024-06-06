@@ -9,6 +9,6 @@ import (
 func InitLogger() {
 	logger2.New(
 		vars.Config.GetString("log.fileName"),
-		vars.Config,
+		&vars.Config,
 	)
 }
