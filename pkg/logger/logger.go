@@ -42,7 +42,7 @@ func ApplyWriter(fileName string, c *config.Config) io.Writer {
 		Compress:   c.GetBool("log.compress"),  // Whether to compress archive logs
 	}
 	// change file perms 0600 to 0644
-	os.Chmod(fileName, 0644)
+	os.Chmod(fileName, 0o644)
 	dlvl.Set(slog.Level(c.GetInt("log.level")))
 	writer := io.MultiWriter(os.Stdout, r)
 	if c.GetString("server.mode") == "production" {

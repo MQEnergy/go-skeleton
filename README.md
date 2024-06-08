@@ -124,7 +124,8 @@ var (
     MDB      map[string]*gorm.DB // mysql多数据库操作
     Redis    *redis.Client       // redis连接池
     Router   *fiber.Router       // 路由
-    Config   *config.Config      // 配置
+    Config   config.Config      // 配置
+	Once     sync.Once
 )
 ```
 
