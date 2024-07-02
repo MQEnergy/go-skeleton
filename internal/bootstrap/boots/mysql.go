@@ -55,7 +55,7 @@ func handleMysql(sourceMaps map[string]interface{}) (*database.Database, error) 
 	logLevel := sourceMaps["loglevel"].(int)
 	masterDsn := sourceMaps["master"].(string)
 	prefix := sourceMaps["prefix"].(string)
-	seperation := sourceMaps["seperation"].(bool)
+	separation := sourceMaps["separation"].(bool)
 	slaves := sourceMaps["slave"].([]interface{})
 
 	dbContainer := func(dns string) *mysql.Mysql {
@@ -93,8 +93,8 @@ func handleMysql(sourceMaps map[string]interface{}) (*database.Database, error) 
 	if err != nil {
 		return nil, err
 	}
-	// write read seperate
-	if seperation {
+	// write read separate
+	if separation {
 		var replicas []gorm.Dialector
 		for _, slave := range slaves {
 			replicas = append(replicas, dbContainer(slave.(string)).Instance())

@@ -29,7 +29,7 @@ database:
     maxIdleTime: 0 # 设置连接池中保持空闲的最长时间（秒）默认是0 意味着连接池中的连接将保持打开状态
     sources: # 数据库配置 需要配置多个数据库 复制default以下模板
       default: # 默认数据库 (此名称切勿修改)
-        seperation: false # 配置是否使用读写分离，方便改配置切换
+        separation: false # 配置是否使用读写分离，方便改配置切换
         fileName: 'default-sql' # 日志文件名称 【需修改】
         logLevel: 1 # 日志模式 1:slient 2:error 3:warn 4:info
         prefix: "cn_"
