@@ -2,7 +2,6 @@ package boots
 
 import (
 	"fmt"
-	"log/slog"
 	"os"
 
 	"github.com/MQEnergy/go-skeleton/internal/vars"
