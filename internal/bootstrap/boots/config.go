@@ -1,9 +1,10 @@
 package boots
 
 import (
+	"log/slog"
+
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/config"
-	"log/slog"
 )
 
 // InitConfig ...

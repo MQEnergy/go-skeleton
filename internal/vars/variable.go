@@ -3,6 +3,7 @@ package vars
 import (
 	"path"
 	"runtime"
+	"sync"
 
 	"github.com/MQEnergy/go-skeleton/pkg/config"
 
@@ -18,6 +19,7 @@ var (
 	Redis    *redis.Client       // redis连接池
 	Router   *fiber.Router       // 路由
 	Config   config.Config       // 配置
+	Once     sync.Once
 )
 
 func init() {

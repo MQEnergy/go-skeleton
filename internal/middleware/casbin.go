@@ -3,21 +3,19 @@ package middleware
 import (
 	_ "embed"
 	"fmt"
-	"github.com/spf13/cast"
 	"strings"
-
-	"gorm.io/gorm"
 
 	"github.com/MQEnergy/go-skeleton/configs"
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/helper"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
-
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/casbin/casbin/v2/util"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gofiber/fiber/v2"
+	"github.com/spf13/cast"
+	"gorm.io/gorm"
 )
 
 // CasbinMiddleware casbin middleware
