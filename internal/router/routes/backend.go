@@ -3,14 +3,16 @@ package routes
 import (
 	"github.com/MQEnergy/go-skeleton/internal/middleware"
 	"github.com/MQEnergy/go-skeleton/internal/vars"
+	"github.com/MQEnergy/go-skeleton/pkg/database"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
 	"github.com/gofiber/fiber/v2"
 )
 
 // InitBackendGroup 初始化后台接口路由
 func InitBackendGroup(r fiber.Router, handles ...fiber.Handler) {
-	// Todo 注意：这个prefix配置不能与yaml配置共用，因为casbin的底层方法getFullTableName拼接表名加上了下划线“_”
-	backendHandles := append(handles, middleware.CasbinMiddleware(vars.DB, "cn", "casbin_rule"))
+	prefix := vars.Config.GetString("database.mysql.sources." + database.DefaultAlias + ".prefix")
+	// 注意：这个prefix参数不能与yaml配置共用，因为casbin的底层方法getFullTableName拼接表名加上了下划线“_”，所以在表名称上拼接
+	backendHandles := append(handles, middleware.CasbinMiddleware(vars.DB, "", prefix+"casbin_rule"))
 	router := r.Group("backend", backendHandles...)
 	{
 		router.Get("/", func(ctx *fiber.Ctx) error {
