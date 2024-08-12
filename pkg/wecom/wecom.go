@@ -2,6 +2,7 @@ package wecom
 
 import (
 	"fmt"
+	"github.com/ArtisanCloud/PowerSocialite/v3/src/providers"
 
 	"github.com/ArtisanCloud/PowerSocialite/v3/src/response/weCom"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
@@ -34,8 +35,8 @@ func New(options ...Options) (*Config, error) { // 生成配置
 		CorpID:      config.corpID,
 		AgentID:     config.agentID,
 		Secret:      config.secret,
-		CallbackURL: config.callbackUrl,
-		OAuth:       config.oauth,
+		CallbackURL: config.callbackUrl, // 内部应用的场景回调设置
+		OAuth:       config.oauth,       // 内部应用的app oauth url
 		HttpDebug:   config.httpDebug,
 		Cache:       config.cache,
 	})
@@ -93,37 +94,50 @@ func WithCache(cache kernel.CacheInterface) OptionFunc {
 }
 
 // GetQrConnectURL 扫码授权登录
-func (c *Config) GetQrConnectURL() (string, error) {
-	if c.work == nil {
-		return "", fmt.Errorf("work is nil")
-	}
+func (c *Config) GetQrConnectURL(state string) (string, error) {
+	c.work.OAuth.Provider.WithState(state)
 	c.work.OAuth.Provider.WithRedirectURL(c.callbackUrl)
 	return c.work.OAuth.Provider.GetQrConnectURL()
 }
 
 // GetAuthURL 网页授权登录
 func (c *Config) GetAuthURL() (string, error) {
-	if c.work == nil {
-		return "", fmt.Errorf("work is nil")
-	}
 	c.work.OAuth.Provider.WithRedirectURL(c.callbackUrl)
 	return c.work.OAuth.Provider.GetAuthURL()
 }
 
 // GetOAuthUrl 获取授权url地址
 func (c *Config) GetOAuthUrl() string {
-	if c.work == nil {
-		return ""
-	}
 	c.work.OAuth.Provider.WithRedirectURL(c.callbackUrl)
 	return c.work.OAuth.Provider.GetOAuthURL()
 }
 
-// GetUserDetail 获取用户信息
-func (c *Config) GetUserDetail(code string) (*weCom.ResponseGetUserDetail, error) {
-	if c.work == nil {
-		return nil, fmt.Errorf("work is nil")
+// GetUserDetail 获取用户敏感信息
+func (c *Config) GetUserDetail(userTicket string) (*weCom.ResponseGetUserDetail, error) {
+	accessToken, err := c.work.AccessToken.GetToken(false)
+	if err != nil {
+		return nil, err
 	}
+	if accessToken.ErrCode != 0 {
+		return nil, fmt.Errorf(accessToken.ErrMsg)
+	}
+	userDetail, err := c.work.OAuth.Provider.WithApiAccessToken(accessToken.AccessToken).GetUserDetail(userTicket)
+	if err != nil {
+		return nil, err
+	}
+	if userDetail.ErrCode != 0 {
+		return nil, fmt.Errorf(userDetail.ErrMSG)
+	}
+	return userDetail, nil
+}
+
+// ContactFromCode 根据code获取企业用户信息 (注意：/user/getuserinfo为旧接口 auth/getuserinfo为新接口)
+func (c *Config) ContactFromCode(code string) (*providers.User, error) {
+	return c.work.OAuth.Provider.Detailed().ContactFromCode(code)
+}
+
+// GetUserInfo 获取访问用户身份
+func (c *Config) GetUserInfo(code string) (*weCom.ResponseGetUserInfo, error) {
 	userInfo, err := c.work.OAuth.Provider.GetUserInfo(code)
 	if err != nil {
 		return nil, err
@@ -131,12 +145,17 @@ func (c *Config) GetUserDetail(code string) (*weCom.ResponseGetUserDetail, error
 	if userInfo.ErrCode != 0 {
 		return nil, fmt.Errorf(userInfo.ErrMSG)
 	}
-	detail, err := c.work.OAuth.Provider.GetUserDetail(userInfo.UserTicket)
+	return userInfo, nil
+}
+
+// GetUserByID 根据用户id获取用户信息
+func (c *Config) GetUserByID(userID string) (*weCom.ResponseGetUserByID, error) {
+	userByID, err := c.work.OAuth.Provider.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
-	if detail.ErrCode != 0 {
-		return nil, fmt.Errorf(detail.ErrMSG)
+	if userByID.ErrCode != 0 {
+		return nil, fmt.Errorf(userByID.ErrMSG)
 	}
-	return detail, nil
+	return userByID, nil
 }
