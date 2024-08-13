@@ -11,8 +11,7 @@ import (
 // InitBackendGroup 初始化后台接口路由
 func InitBackendGroup(r fiber.Router, handles ...fiber.Handler) {
 	prefix := vars.Config.GetString("database.mysql.sources." + database.DefaultAlias + ".prefix")
-	// 注意：这个prefix参数不能与yaml配置共用，因为casbin的底层方法getFullTableName拼接表名加上了下划线“_”，所以在表名称上拼接
-	backendHandles := append(handles, middleware.CasbinMiddleware(vars.DB, "", prefix+"casbin_rule"))
+	backendHandles := append(handles, middleware.CasbinMiddleware(vars.DB, prefix, ""))
 	router := r.Group("backend", backendHandles...)
 	{
 		router.Get("/", func(ctx *fiber.Ctx) error {
