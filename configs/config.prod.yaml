@@ -1,6 +1,7 @@
 server:
   mode: 'production'
   prefork: false
+  bufferSize: 8192 # cookie缓冲区大小 默认是4096
   defaultPageSize: 10 # 默认分页条数
   maxPageSize: 500    # 最大分页条数
   fileUploadPath: 'upload' # 文件上传路径

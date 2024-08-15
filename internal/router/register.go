@@ -33,7 +33,8 @@ func Register(appName string) *fiber.App {
 		JSONEncoder:           json.Marshal, // If you're not happy with the performance of encoding/json, we recommend you to use these libraries
 		JSONDecoder:           json.Unmarshal,
 	})
-
+	// fix: Request Header Fields Too Large
+	r.Server().ReadBufferSize = vars.Config.GetInt("server.bufferSize")
 	// middleware cors, compress, cache, X-Request-Id
 	r.Use(
 		recover.New(),
