@@ -1,6 +1,7 @@
 package pagination
 
 import (
+	"gorm.io/gorm"
 	"math"
 
 	"github.com/MQEnergy/go-skeleton/internal/vars"
@@ -69,4 +70,19 @@ func (pb *PaginateResp) SetList(list any) *PaginateResp {
 func (pb *PaginateResp) SetCount(count int64) *PaginateResp {
 	pb.Total = count
 	return pb
+}
+
+// FindByPage 分页查询
+func FindByPage[T comparable](db *gorm.DB, offset int, limit int) (result []T, count int64, err error) {
+	if err = db.Offset(offset).Limit(limit).Find(&result).Error; err != nil {
+		return
+	}
+	if size := len(result); 0 < limit && 0 < size && size < limit {
+		count = int64(size + offset)
+		return
+	}
+	if err = db.Offset(-1).Limit(-1).Count(&count).Error; err != nil {
+		return
+	}
+	return
 }
