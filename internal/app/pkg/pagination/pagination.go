@@ -1,8 +1,9 @@
 package pagination
 
 import (
-	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"math"
+
+	"github.com/MQEnergy/go-skeleton/internal/vars"
 )
 
 // PaginateResp ...

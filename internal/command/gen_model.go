@@ -103,14 +103,62 @@ func handleGenModel(alias, models string) error {
 		command.WithTableMethods(entity.Load(modelNames)),
 		command.WithIgnoreFields(),
 		command.WithDataTypeMap(map[string]func(columnType gorm.ColumnType) (dataType string){
-			"varchar":   func(columnType gorm.ColumnType) (dataType string) { return "string" },
-			"int":       func(columnType gorm.ColumnType) (dataType string) { return "int" },
-			"bigint":    func(columnType gorm.ColumnType) (dataType string) { return "int64" },
-			"tinyint":   func(columnType gorm.ColumnType) (dataType string) { return "int8" },
-			"smallint":  func(columnType gorm.ColumnType) (dataType string) { return "int16" },
-			"mediumint": func(columnType gorm.ColumnType) (dataType string) { return "int32" },
+			"varchar": func(columnType gorm.ColumnType) (dataType string) { return "string" },
+			"int": func(columnType gorm.ColumnType) (dataType string) {
+				_columnType, ok := columnType.ColumnType()
+				if !ok {
+					return "int"
+				}
+				if columnType.Name() == "deleted_at" {
+					return "gorm.DeletedAt"
+				}
+				if _columnType == "int unsigned" {
+					return "uint"
+				}
+				return "int"
+			},
+			"bigint": func(columnType gorm.ColumnType) (dataType string) {
+				_columnType, ok := columnType.ColumnType()
+				if !ok {
+					return "int64"
+				}
+				if _columnType == "bigint unsigned" {
+					return "uint64"
+				}
+				return "int64"
+			},
+			"tinyint": func(columnType gorm.ColumnType) (dataType string) {
+				_columnType, ok := columnType.ColumnType()
+				if !ok {
+					return "int8"
+				}
+				if _columnType == "tinyint unsigned" {
+					return "uint8"
+				}
+				return "int8"
+			},
+			"smallint": func(columnType gorm.ColumnType) (dataType string) {
+				_columnType, ok := columnType.ColumnType()
+				if !ok {
+					return "int16"
+				}
+				if _columnType == "smallint unsigned" {
+					return "uint16"
+				}
+				return "int16"
+			},
+			"mediumint": func(columnType gorm.ColumnType) (dataType string) {
+				_columnType, ok := columnType.ColumnType()
+				if !ok {
+					return "int32"
+				}
+				if _columnType == "mediumint unsigned" {
+					return "uint32"
+				}
+				return "int32"
+			},
 			"decimal":   func(columnType gorm.ColumnType) (dataType string) { return "float64" },
-			"timestamp": func(detailType gorm.ColumnType) (dataType string) { return "int64" },
+			"timestamp": func(detailType gorm.ColumnType) (dataType string) { return "time.Time" },
 		}),
 	)
 	if err != nil {

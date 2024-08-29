@@ -90,6 +90,10 @@ func (c *Config) GetInt64(key string) int64 {
 	return cast.ToInt64(c.Get(key))
 }
 
+func (c *Config) GetUint64(key string) uint64 {
+	return cast.ToUint64(c.Get(key))
+}
+
 func (c *Config) GetFloat64(key string) float64 {
 	return cast.ToFloat64(c.Get(key))
 }

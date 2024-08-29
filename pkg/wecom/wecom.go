@@ -2,6 +2,7 @@ package wecom
 
 import (
 	"fmt"
+
 	"github.com/ArtisanCloud/PowerSocialite/v3/src/providers"
 
 	"github.com/ArtisanCloud/PowerSocialite/v3/src/response/weCom"
