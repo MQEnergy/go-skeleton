@@ -37,6 +37,14 @@ clean:
 	@go clean -i .
 	@rm -rf releases
 
+.PHONY: swagger
+swagger:
+	@if ! command -v swag &> /dev/null; then \
+		echo "swag not found, installing..."; \
+		@go install github.com/swaggo/swag/cmd/swag@latest; \
+	fi
+	@swag init -d cmd/app -o docs
+
 .PHONY: help
 help:
 	@echo "1. make build - [go build]"
