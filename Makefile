@@ -24,7 +24,7 @@ darwin:
 lint:
 	@if ! command -v gofumpt &> /dev/null; then \
 		echo "gofumpt not found, installing..."; \
-		@go install mvdan.cc/gofumpt@latest; \
+		go install mvdan.cc/gofumpt@latest; \
 	fi
 	@gofumpt -l -w .
 
@@ -41,7 +41,7 @@ clean:
 swagger:
 	@if ! command -v swag &> /dev/null; then \
 		echo "swag not found, installing..."; \
-		@go install github.com/swaggo/swag/cmd/swag@latest; \
+		go install github.com/swaggo/swag/cmd/swag@latest; \
 	fi
 	@swag init -d cmd/app -o docs
 
