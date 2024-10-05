@@ -246,6 +246,8 @@ func GetFileNamesByDirPath(root string) ([]map[string]interface{}, error) {
 		if err != nil {
 			continue
 		}
+
+		dir = strings.Replace(dir, "\\", "/", -1)
 		pathItem = map[string]interface{}{
 			"path":  strings.Replace(dir, root, "", 1),
 			"files": []string{},
