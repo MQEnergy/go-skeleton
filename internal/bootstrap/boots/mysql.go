@@ -3,6 +3,7 @@ package boots
 import (
 	"log"
 	"log/slog"
+	"net/url"
 	"time"
 
 	"github.com/MQEnergy/go-skeleton/internal/vars"
@@ -37,7 +38,7 @@ func InitMultiMysql() error {
 		sm := gconv.Map(m)
 		d, err := handleMysql(sm)
 		if err != nil {
-			slog.Error("Failed to start mysql connection err: ", err.Error())
+			slog.Error("Failed to start mysql connection ", "err", err.Error())
 			continue
 		}
 		if alias == database.DefaultAlias {
@@ -53,7 +54,7 @@ func InitMultiMysql() error {
 func handleMysql(sourceMaps map[string]interface{}) (*database.Database, error) {
 	fileName := sourceMaps["filename"].(string)
 	logLevel := sourceMaps["loglevel"].(int)
-	masterDsn := sourceMaps["master"].(string)
+	masterDsn, _ := url.QueryUnescape(sourceMaps["master"].(string))
 	prefix := sourceMaps["prefix"].(string)
 	separation := sourceMaps["separation"].(bool)
 	slaves := sourceMaps["slave"].([]interface{})
@@ -97,7 +98,8 @@ func handleMysql(sourceMaps map[string]interface{}) (*database.Database, error) 
 	if separation {
 		var replicas []gorm.Dialector
 		for _, slave := range slaves {
-			replicas = append(replicas, dbContainer(slave.(string)).Instance())
+			slaveDsn, _ := url.QueryUnescape(slave.(string))
+			replicas = append(replicas, dbContainer(slaveDsn).Instance())
 		}
 		if err := d.WithSlaveDB([]gorm.Dialector{dbContainer(masterDsn).Instance()}, replicas); err != nil {
 			return nil, err

@@ -15,13 +15,21 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bwmarrin/snowflake"
 	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/hashicorp/go-uuid"
-	"github.com/spf13/cast"
 	"gorm.io/gorm/schema"
+)
+
+var (
+	snowflakeNode *snowflake.Node
+	sequence      uint32
+	sequenceMutex sync.Mutex
+	generatedIDs  map[int64]bool
+	idMutex       sync.Mutex
 )
 
 // InAnySlice 判断某个字符串是否在字符串切片中
@@ -54,35 +62,37 @@ func GetKeyByMap[T comparable](m map[string]T, value T) string {
 	return ""
 }
 
-// GenerateBaseSnowId 生成雪花算法ID
-func GenerateBaseSnowId(num int, n *snowflake.Node) string {
-	if n == nil {
-		localIp, err := GetLocalIpToInt()
-		if err != nil {
-			return ""
-		}
-		node, err := snowflake.NewNode(int64(localIp) % 1023)
-		n = node
+// GenerateSnowId 生成唯一ID
+func GenerateSnowId() int64 {
+	// 清理已生成的ID记录，防止内存泄漏
+	if len(generatedIDs) > 1000000 { // 假设我们只保留最近的100万个ID
+		generatedIDs = make(map[int64]bool)
 	}
-	id := n.Generate()
-	switch num {
-	case 2:
-		return id.Base2()
-	case 32:
-		return id.Base32()
-	case 36:
-		return id.Base36()
-	case 58:
-		return id.Base58()
-	case 64:
-		return id.Base64()
-	default:
-		return cast.ToString(id.Int64())
+	// 生成基础ID
+	id := snowflakeNode.Generate().Int64()
+
+	// 添加序列号
+	sequenceMutex.Lock()
+	sequence++
+	id += int64(sequence)
+	sequenceMutex.Unlock()
+
+	// 检查是否重复
+	idMutex.Lock()
+	if !generatedIDs[id] {
+		generatedIDs[id] = true
+		idMutex.Unlock()
+		return id
 	}
+	idMutex.Unlock()
+
+	// 如果重复，等待一小段时间后重试
+	time.Sleep(time.Millisecond)
+	return GenerateSnowId()
 }
 
-// GenerateUuid 生成随机字符串
-func GenerateUuid(size int) string {
+// GenerateRandomUUID 生成随机字符串
+func GenerateRandomUUID(size int) string {
 	str, err := uuid.GenerateUUID()
 	if err != nil {
 		return ""

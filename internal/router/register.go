@@ -28,9 +28,10 @@ func Register(appName string) *fiber.App {
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
 			return response.NotFoundException(c, err.Error())
 		},
-		DisableStartupMessage: false,        // When set to true, it will not print out debug information
-		AppName:               appName,      // This allows to setup app name for the app
-		JSONEncoder:           json.Marshal, // If you're not happy with the performance of encoding/json, we recommend you to use these libraries
+		DisableStartupMessage: false,             // When set to true, it will not print out debug information
+		BodyLimit:             100 * 1024 * 1024, // Set the body limit to 100MB
+		AppName:               appName,           // This allows to setup app name for the app
+		JSONEncoder:           json.Marshal,      // If you're not happy with the performance of encoding/json, we recommend you to use these libraries
 		JSONDecoder:           json.Unmarshal,
 	})
 	// fix: Request Header Fields Too Large
