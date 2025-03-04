@@ -2,9 +2,11 @@ package controller
 
 import (
 	"errors"
+	"fmt"
 	"github.com/MQEnergy/go-skeleton/internal/app/pkg/validator"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
-	"reflect"
+	"github.com/gofiber/fiber/v2/utils"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -45,30 +47,45 @@ func init() {
 
 // Validate ...
 func (c *Controller) Validate(ctx *fiber.Ctx, param any) error {
-	dest := reflect.ValueOf(param).Elem()
-	paramType := dest.Type()
-
-	queryInstance := reflect.New(paramType).Interface()
-	if err := ctx.QueryParser(queryInstance); err != nil {
-		return errors.New("参数格式错误")
+	if err := ctx.ParamsParser(param); err != nil {
+		return fmt.Errorf("路由参数解析失败: %v", err)
 	}
 
 	if ctx.Method() == fiber.MethodPost {
-		if err := ctx.BodyParser(param); err != nil {
-			return errors.New("参数格式错误")
+		contentType := string(ctx.Request().Header.ContentType())
+		contentType = utils.ParseVendorSpecificContentType(contentType)
+		ctypeEnd := strings.IndexByte(contentType, ';')
+		if ctypeEnd != -1 {
+			contentType = contentType[:ctypeEnd]
+		}
+		switch {
+		case
+			strings.HasPrefix(contentType, fiber.MIMEApplicationForm),
+			strings.HasSuffix(contentType, "json"),
+			strings.HasPrefix(contentType, fiber.MIMEMultipartForm),
+			strings.HasPrefix(contentType, fiber.MIMETextXML),
+			strings.HasPrefix(contentType, fiber.MIMEApplicationXML):
+			if err := ctx.QueryParser(param); err != nil {
+				return fmt.Errorf("查询参数解析失败: %v", err)
+			}
+			if err := ctx.BodyParser(param); err != nil {
+				return fmt.Errorf("查询参数解析失败: %v", err)
+			}
+
+		default:
+			if err := ctx.QueryParser(param); err != nil {
+				return fmt.Errorf("查询参数解析失败: %v", err)
+			}
+		}
+	} else {
+		if err := ctx.QueryParser(param); err != nil {
+			return fmt.Errorf("查询参数解析失败: %v", err)
 		}
 	}
 
-	queryValue := reflect.ValueOf(queryInstance).Elem()
-	for i := 0; i < dest.NumField(); i++ {
-		if _, hasQuery := paramType.Field(i).Tag.Lookup("query"); hasQuery {
-			dest.Field(i).Set(queryValue.Field(i))
-		}
-	}
-
-	translates := validate.Validate(param)
-	if len(translates) > 0 && translates[0].Error {
+	if translates := validate.Validate(param); len(translates) > 0 && translates[0].Error {
 		return errors.New(translates[0].Message)
 	}
+
 	return nil
 }
