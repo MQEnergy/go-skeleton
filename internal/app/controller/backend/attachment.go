@@ -16,6 +16,17 @@ type AttachmentController struct {
 var Attachment = &AttachmentController{}
 
 // Upload 上传资源
+//
+//	@Summary		上传文件
+//	@Description	上传文件到服务器
+//	@Tags			attachment
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Param			file	formData	file	true	"上传的文件"
+//	@Param			filePath	formData	string	false	"文件存储路径"
+//	@Success		200		{object}	response.JSONResponse	"成功返回"
+//	@Failure		400		{object}	response.JSONResponse	"请求参数错误"
+//	@Router			/backend/attachment/upload [post]
 func (c *AttachmentController) Upload(ctx *fiber.Ctx) error {
 	reqParams := &attachment.UploadReq{}
 	if err := c.Validate(ctx, reqParams); err != nil {

@@ -37,13 +37,13 @@ clean:
 	@go clean -i .
 	@rm -rf releases
 
-.PHONY: swagger
-swagger:
+.PHONY: docs
+docs:
 	@if ! command -v swag &> /dev/null; then \
 		echo "swag not found, installing..."; \
 		go install github.com/swaggo/swag/cmd/swag@latest; \
 	fi
-	@swag init -d cmd/app -o docs
+	@swag init -g ../../cmd/app/main.go -d cmd/app,internal/app --exclude "docs/,vendor/,**/*_test.go" --parseDepth 3 --parseDependency --parseInternal -o docs
 
 .PHONY: help
 help:
@@ -54,3 +54,4 @@ help:
 	@echo "5. make lint - [gofumpt -l -w .]"
 	@echo "6. make generate - [go generate -x]"
 	@echo "7. make clean - [remove releases files and cached files]"
+	@echo "8. make docs - [generate swagger docs]"

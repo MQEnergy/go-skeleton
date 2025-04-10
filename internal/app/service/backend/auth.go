@@ -12,13 +12,7 @@ type AuthService struct {
 
 var Auth = &AuthService{}
 
-// Login
-// @Description: 登录
-// @receiver s
-// @param reqParams
-// @return interface{}
-// @return error
-// @author cx
+// Login 用户登录
 func (s *AuthService) Login(reqParams *user.LoginReq) (fiber.Map, error) {
 	//var (
 	//	isSuper   = 0 // 是否超级管理员 1：是 0：不是

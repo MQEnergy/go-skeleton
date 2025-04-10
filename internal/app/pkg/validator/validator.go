@@ -54,12 +54,7 @@ func New(local string) (*XValidator, error) {
 	}, nil
 }
 
-// Validate
-// @Description: 验证
-// @receiver v
-// @param data
-// @return []ErrorResponse
-// @author cx
+// Validate	验证
 func (v *XValidator) Validate(data interface{}) []ErrorResponse {
 	var validateErrors []ErrorResponse
 	if errs := v.validate.Struct(data); errs != nil {

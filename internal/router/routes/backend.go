@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/MQEnergy/go-skeleton/internal/app/controller/backend"
 	"github.com/MQEnergy/go-skeleton/internal/middleware"
 	"github.com/MQEnergy/go-skeleton/internal/vars"
 	"github.com/MQEnergy/go-skeleton/pkg/database"
@@ -17,6 +18,8 @@ func InitBackendGroup(r fiber.Router, handles ...fiber.Handler) {
 		router.Get("/", func(ctx *fiber.Ctx) error {
 			return response.SuccessJSON(ctx, "", "backend")
 		})
+
+		router.Get("/user/index", backend.User.Index)
 	}
 
 	// casbin中间件可根据不同的数据库进行单独配置 示例如下：

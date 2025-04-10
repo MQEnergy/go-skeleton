@@ -169,7 +169,7 @@ func (u *Upload) validate(file *multipart.FileHeader) (*FileHeader, error) {
 		return nil, errors.New("上传文件格式错误")
 	}
 	filePrefix := helper.GetKeyByMap[string](u.AllowTypes, contentType)
-	fileName := fmt.Sprintf("file-%s.%s", helper.GenerateUuid(32), filePrefix)
+	fileName := fmt.Sprintf("file-%s.%s", helper.GenerateRandomUUID(32), filePrefix)
 	return &FileHeader{
 		Filename:   fileName,
 		FileSize:   file.Size,

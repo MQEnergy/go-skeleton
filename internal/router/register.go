@@ -9,6 +9,7 @@ import (
 	"github.com/MQEnergy/go-skeleton/pkg/helper"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
 	"github.com/goccy/go-json"
+	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -56,6 +57,17 @@ func Register(appName string) *fiber.App {
 		compress.New(),
 		requestid.New(),
 	)
+
+	// swagger
+	if vars.Config.GetBool("swagger.enabled") {
+		r.Use(swagger.New(swagger.Config{
+			BasePath: vars.Config.GetString("swagger.basePath"),
+			FilePath: vars.Config.GetString("swagger.filePath"),
+			Path:     vars.Config.GetString("swagger.path"),
+			Title:    vars.Config.GetString("swagger.title"),
+		}))
+	}
+
 	// common
 	routes.InitCommonGroup(r, publicMiddleware...)
 

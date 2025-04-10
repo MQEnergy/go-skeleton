@@ -70,6 +70,21 @@ func Stack() *cli.App {
 	return app
 }
 
+// 添加注释以描述 server 信息
+//	@title			Go-skeleton API Docs
+//	@version		1.0
+//	@description	基于Go语言和fiber框架的高性能高并发的Web项目骨架
+//	@termsOfService	http://swagger.io/terms/
+
+//	@contact.name	API Support
+//	@contact.url	http://www.swagger.io/support
+//	@contact.email	support@swagger.io
+
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host		localhost:9527
+// @basePath	/
 func main() {
 	if err := Stack().Run(os.Args); err != nil {
 		panic(err)

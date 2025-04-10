@@ -8,6 +8,12 @@ server:
   fileHostUrl: 'http://127.0.0.1:9527/' # 文件访问域名 【需修改】
   whiteList: '*' # 白名单
   originList: '*' # cors地址列表以逗号相隔 默认* 按需配置如：https://example1.com,https://example2.com,
+swagger:
+  enabled: true
+  basePath: '/'
+  filePath: './docs/swagger.json'
+  path: 'docs'
+  title: 'Go-skeleton API Docs'
 jwt:
   expire: 864000   # token过期时间 单位：s
   issuer: 'go-skeleton'                   #【需修改】

@@ -3,10 +3,11 @@ package controller
 import (
 	"errors"
 	"fmt"
+	"strings"
+
 	"github.com/MQEnergy/go-skeleton/internal/app/pkg/validator"
 	"github.com/MQEnergy/go-skeleton/pkg/response"
 	"github.com/gofiber/fiber/v2/utils"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )

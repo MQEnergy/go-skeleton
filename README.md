@@ -1,4 +1,5 @@
 # go-skeleton
+
 基于Go语言（版本：>=v1.22.0）和fiber框架的高性能高并发的Web项目骨架
 
 # 持续更新中...
@@ -7,12 +8,12 @@
 
 项目地址：[https://github.com/MQEnergy/mqshop](https://github.com/MQEnergy/mqshop)
 
-
 [![GoDoc](https://pkg.go.dev/badge/github.com/MQEnergy/go-skeleton)](https://github.com/MQEnergy/go-skeleton)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue?link=MQEnergy%2Fgo-skeleton)](https://github.com/MQEnergy/go-skeleton/blob/main/LICENSE)
 [![codebeat badge](https://codebeat.co/badges/09ce2b03-b0b1-40eb-9ac7-b91bccdb8c0d)](https://codebeat.co/projects/github-com-mqenergy-go-skeleton-main)
 
 ## 一、项目结构
+
 ```
 ├── LICENSE
 ├── Makefile          # 构建
@@ -49,23 +50,27 @@
     └── wecom         # 企业微信
 
 ```
+
 #### 目前已集成和实现：
-- [x] 支持 [jwt](https://github.com/golang/jwt-go) Authorization token验证组件
-- [x] 支持 [cors](https://github.com/gofiber/contrib/cors) 跨域组件
-- [x] 支持 [gorm](https://gorm.io) 数据库操作组件
-- [x] 支持 [redis](https://github.com/go-redis/redis) cache组件
-- [x] 支持 [slog](https://github.com/samber/slog-fiber) 日志组件
-- [x] 支持 [controller、service、model、middleware、command](https://github.com/MQEnergy/go-skeleton/tree/main/internal/command) 命令行方式生成代码工具
-- [x] 支持 [casbin](https://github.com/casbin/casbin) rbac权限 集成于中间件中 [casbin.go](https://github.com/MQEnergy/go-skeleton/blob/main/internal/middleware/casbin.go)
-- [x] 支持 [viper](https://github.com/spf13/viper) yaml、json、toml等配置文件解析组件
-- [x] 支持 [validator](https://github.com/go-playground/validator) 数据字段验证器组件，同时支持中文
-- [x] 支持 [snowflake](https://github.com/bwmarrin/snowflake) 生成雪花算法全局唯一ID
-- [x] 实现 ip白名单配置 集成于中间件中 [whitelist.go](https://github.com/MQEnergy/go-skeleton/blob/main/internal/middleware/whitelist.go)
-- [x] 实现 [code](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/response/code.go) 统一定义的返回码，[exception](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/response/response.go) 统一错误返回处理组件
-- [x] 实现 [wecom](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/wecom/wecom.go) 企业微信组件
-- [x] 实现 [oss](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/oss/oss.go) 阿里云oss组件
+
+- [X] 支持 [jwt](https://github.com/golang/jwt-go) Authorization token验证组件
+- [X] 支持 [cors](https://github.com/gofiber/contrib/cors) 跨域组件
+- [X] 支持 [gorm](https://gorm.io) 数据库操作组件
+- [X] 支持 [redis](https://github.com/go-redis/redis) cache组件
+- [X] 支持 [slog](https://github.com/samber/slog-fiber) 日志组件
+- [X] 支持 [controller、service、model、middleware、command](https://github.com/MQEnergy/go-skeleton/tree/main/internal/command) 命令行方式生成代码工具
+- [X] 支持 [casbin](https://github.com/casbin/casbin) rbac权限 集成于中间件中 [casbin.go](https://github.com/MQEnergy/go-skeleton/blob/main/internal/middleware/casbin.go)
+- [X] 支持 [viper](https://github.com/spf13/viper) yaml、json、toml等配置文件解析组件
+- [X] 支持 [validator](https://github.com/go-playground/validator) 数据字段验证器组件，同时支持中文
+- [X] 支持 [snowflake](https://github.com/bwmarrin/snowflake) 生成雪花算法全局唯一ID
+- [X] 实现 ip白名单配置 集成于中间件中 [whitelist.go](https://github.com/MQEnergy/go-skeleton/blob/main/internal/middleware/whitelist.go)
+- [X] 实现 [code](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/response/code.go) 统一定义的返回码，[exception](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/response/response.go) 统一错误返回处理组件
+- [X] 实现 [wecom](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/wecom/wecom.go) 企业微信组件
+- [X] 实现 [oss](https://github.com/MQEnergy/go-skeleton/tree/main/pkg/oss/oss.go) 阿里云oss组件
+- [X] 增加swagger文档支持
 
 #### 下一步计划：
+
 - [ ] 支持 cron 定时任务
 - [ ] 支持 pprof 性能剖析组件
 - [ ] 支持 trace 项目内部链路追踪
@@ -76,6 +81,7 @@
 - [ ] 实现 mongodb 数据库连接
 
 ## 二、运行项目
+
 ```shell
 # 安装依赖
 go mod tidy
@@ -109,6 +115,11 @@ make linux
 
 # 打包成macos
 make darwin
+
+# 生成swagger文档
+make docs
+# 访问文档
+http://127.0.0.1:9527/docs
 ```
 
 ## 三、基础功能
@@ -116,7 +127,9 @@ make darwin
 配置文件存在于[configs](configs)
 
 ### 1、全局变量
+
 在internal/vars目录中可查看全局可用的参数
+
 ```go
 var (
     BasePath string              // 根目录
@@ -130,6 +143,7 @@ var (
 ```
 
 ### 2、基于gorm/gen生成model和dao
+
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genModel -h
@@ -178,6 +192,7 @@ var methodMaps = MethodMaps{
 ```
 
 ### 3、创建command命令
+
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genCommand -h
@@ -190,6 +205,7 @@ go run cmd/cli/main.go genCommand -n=foo [-d=foo] [-s=mysql,redis]
 ```
 
 ### 4、创建controller
+
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genController -h
@@ -199,6 +215,7 @@ go run cmd/cli/main.go genController -n=foo [-d=foo]
 ```
 
 ### 5、创建service
+
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genService -h
@@ -208,7 +225,9 @@ go run cmd/cli/main.go genService -n=foo [-d=foo]
 ```
 
 ### 6、中间件
+
 1、通过命令创建中间件
+
 ```shell
 # 查看帮助
 go run cmd/cli/main.go genMiddleware -h
@@ -218,6 +237,7 @@ go run cmd/cli/main.go genMiddleware -n=foo
 ```
 
 ### 7、日志
+
 ```go
 import "log/slog"
 
@@ -228,8 +248,10 @@ slog.Debug("Debug")
 ```
 
 ### 8、验证器
+
 在controller中文件中直接调用Validate方法
 示例如下：
+
 ```go
 package backend
 
@@ -257,7 +279,9 @@ func (c *FooController) Index(ctx *fiber.Ctx) error {
 ```
 
 ### 9、响应体
+
 在[pkg/response/response.go](./pkg/response/response.go)文件中
+
 ```go
 // 基础返回
 response.JSON(ctx *fiber.Ctx, status int, errcode Code, message string, data interface{})
@@ -270,6 +294,7 @@ response.SuccessJSON(ctx *fiber.Ctx, message string, data interface{})
 ### 10、数据迁移 migrate
 
 ### 11、上传类
+
 参考：
 
 1、调用
@@ -279,6 +304,7 @@ response.SuccessJSON(ctx *fiber.Ctx, message string, data interface{})
 [pkg/upload/upload.go](./pkg/upload/upload.go)
 
 ### 12、service查询数据
+
 查看[service/backend/auth.go](./internal/app/service/backend/auth.go)
 
 ```go
@@ -292,11 +318,10 @@ adminInfo, err = u.GetByAccount(reqParams.Account) // 这个是entity暴露的�
 dao.{数据模型}.{查询方法}
 ```
 
-
 ### 四、单元测试
 
-
 ### 五、格式化代码
+
 ```shell
 # install
 go install mvdan.cc/gofumpt@latest
@@ -306,6 +331,7 @@ gofumpt -l -w .
 ```
 
 ### 六、检查shadow变量
+
 ```shell
 # install
 go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
@@ -313,7 +339,9 @@ go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 # run path为shadow所在目录
 go vet -vettool={path}/shadow ./cmd/app/main.go 
 ```
+
 ### 七、静态分析
+
 ```shell
 # install
 go install go.uber.org/nilaway/cmd/nilaway@latest
@@ -321,11 +349,15 @@ go install go.uber.org/nilaway/cmd/nilaway@latest
 # run 根目录
 nilaway ./...
 ```
+
 ### 八、注意
+
 #### 1、air配置文件 .air.toml在不同环境下需要修改
+
 注意查看[.air.toml](.air.toml)文件
 
 ### benchmark (Todo)
+
 ```bash
 wrk -t12 -c1000 -d30s --script=benchmark/login.lua --latency http://127.0.0.1:9527/backend/auth/login
 ```
